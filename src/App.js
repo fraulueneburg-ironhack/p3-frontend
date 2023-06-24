@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import "./pico.min.css";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./pages/Layout";
+import HomePage from "./pages/HomePage";
+import SignupPage from "./pages/SignupPage";
+import ProfilePage from "./pages/ProfilePage";
+import BudgetOverview from "./pages/BudgetOverview";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/auth/signup" element={<SignupPage />}></Route>
+          <Route path="/auth/profile" element={<ProfilePage />}></Route>
+          <Route path="/auth/budget" element={<BudgetOverview />}></Route>
+        </Route>
+      </Routes>
     </div>
   );
 }
