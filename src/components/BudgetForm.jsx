@@ -37,9 +37,12 @@ function BudgetForm() {
             setUserObj({ ...userObj, [inputName]: inputValue })
         }
         else {
-            console.log("INPUT NAME RENT ETC", inputName)
-            console.log("PARENT", e.target.parentElement.parentElement.id)
+            const parent = e.target.parentElement.parentElement.id;
+
+            console.log("INPUT NAME", inputName)
+            console.log("PARENT", parent)
             //setUserObj({ ...userObj.expenses, userObj.expenses[inputName]: inputValue })
+
         }
         //setUserObj({ ...userObj, [inputName]: inputValue });
         console.log("NAME", inputName)
@@ -50,10 +53,9 @@ function BudgetForm() {
 
     return (
         <>
-            <div>BudgetForm</div>
-            <form>
+            <form className="form-budget">
                 <fieldset>
-                    <legend>Your Currency</legend>
+                    <legend>Your currency</legend>
                     <select name="currency" onChange={handleChange}>
                         <option value="€">€</option>
                         <option value="US$">US$</option>
@@ -64,49 +66,54 @@ function BudgetForm() {
                     <legend>Your earnings</legend>
                     <div className="grid">
                         <label>{userObj.earnings[0].name}</label>
-                        <input type="number" value={userObj.earnings[0].amount} name={userObj.earnings[0].name} onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={deleteItem}*/>-</button>
+                        <input type="number" min="0" value={userObj.earnings[0].amount} name={userObj.earnings[0].name} onChange={handleChange} />
+                        <span className="currency">{`${currency}`}</span>
+                        <button className="btn-delete-item" /*onSubmit={deleteItem}*/>–</button>
                     </div>
                     <div className="grid">
                         <input type="text" /*value={ }*/ name="" onChange={handleChange} placeholder="name" />
-                        <input type="number" /*value={ }*/ name="" onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={addItem}*/>+</button>
+                        <input type="number" min="0" /*value={ }*/ name="" onChange={handleChange} />
+                        <span className="currency">{`${currency}`}</span>
+                        <button className="btn-add-item" /*onSubmit={addItem}*/>+</button>
                     </div>
                 </fieldset>
                 <fieldset id="expenses">
                     <legend>Your expenses</legend>
                     <div className="grid">
                         <label>{userObj.expenses[0].name}</label>
-                        <input type="number" value={userObj.expenses[0].amount} name={userObj.expenses[0].name} onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={deleteItem}*/>-</button>
+                        <input type="number" min="0" value={userObj.expenses[0].amount} name={userObj.expenses[0].name} onChange={handleChange} />
+                        <span className="currency">{`${currency}`}</span>
+                        <button className="btn-delete-item" /*onSubmit={deleteItem}*/>–</button>
                     </div>
                     <div className="grid">
                         <label>{userObj.expenses[1].name}</label>
-                        <input type="number" value={userObj.expenses[1].amount} name={userObj.expenses[1].name} onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={deleteItem}*/>-</button>
+                        <input type="number" min="0" value={userObj.expenses[1].amount} name={userObj.expenses[1].name} onChange={handleChange} />
+                        <span className="currency">{`${currency}`}</span>
+                        <button className="btn-delete-item" /*onSubmit={deleteItem}*/>–</button>
                     </div>
                     <div className="grid">
                         <label>{userObj.expenses[2].name}</label>
-                        <input type="number" value={userObj.expenses[2].amount} name={userObj.expenses[2].name} onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={deleteItem}*/>-</button>
+                        <input type="number" min="0" value={userObj.expenses[2].amount} name={userObj.expenses[2].name} onChange={handleChange} />
+                        <span className="currency">{`${currency}`}</span>
+                        <button className="btn-delete-item" /*onSubmit={deleteItem}*/>–</button>
                     </div>
                     <div className="grid">
                         <input type="text" /*value={ }*/ name="" onChange={handleChange} placeholder="name" />
-                        <input type="number" /*value={ }*/ name="" onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={addItem}*/>+</button>
+                        <input type="number" min="0" /*value={ }*/ name="" onChange={handleChange} /><span className="currency">{`${currency}`}</span>
+                        <button className="btn-add-item" /*onSubmit={addItem}*/>+</button>
                     </div>
                 </fieldset>
                 <fieldset id="savings">
                     <legend>Your saving goals</legend>
                     <div className="grid">
                         <label>Horst's saving goal</label>
-                        <input type="number" /*value={ }*/ name="" onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={deleteItem}*/>-</button>
+                        <input type="number" min="0" /*value={ }*/ name="" onChange={handleChange} /><span className="currency">{`${currency}`}</span>
+                        <button className="btn-delete-item" /*onSubmit={deleteItem}*/>–</button>
                     </div>
                     <div className="grid">
                         <input type="text" /*value={ }*/ name="" onChange={handleChange} placeholder="name" />
-                        <input type="number" /*value={ }*/ name="" onChange={handleChange} />{`${currency}`}
-                        <button /*onSubmit={addItem}*/>+</button>
+                        <input type="number" min="0" /*value={ }*/ name="" onChange={handleChange} /><span className="currency">{`${currency}`}</span>
+                        <button className="btn-add-item" /*onSubmit={addItem}*/>+</button>
                     </div>
                 </fieldset>
                 <fieldset>
@@ -114,8 +121,9 @@ function BudgetForm() {
                 </fieldset>
                 <fieldset>
                     <legend>Your monthly budget:</legend>
-                    10.300,00€
+                    <big>10.300,00€</big>
                 </fieldset>
+                <button>Start planning</button>
             </form>
         </>
     )
