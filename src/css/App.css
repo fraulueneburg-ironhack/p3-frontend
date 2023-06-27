@@ -1,13 +1,61 @@
+/*----- VARIABLES -----*/
+
 :root {
   --form-label-font-weight: bold;
+
   --color-red: #e53935;
-  --color-green: #7cb342;
+  --color-red-hover: #ef5350;
+  --color-green: #43a047;
+  --color-green-hover: #66bb6a;
 }
+
+/*----- GENERAL -----*/
 
 body {
   text-align: center;
   padding-bottom: 3rem;
 }
+
+/*----- TYPOGRAPHY -----*/
+
+big {
+  display: block;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/*----- BUTTONS -----*/
+
+.btn-add-item,
+.btn-delete-item {
+  font-size: 2rem;
+  height: 62px;
+  line-height: 0;
+  text-align: center;
+  width: 70px;
+}
+
+.btn-add-item {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+}
+
+.btn-add-item:hover {
+  background-color: var(--color-green-hover);
+}
+
+.btn-delete-item:hover {
+  background-color: var(--color-red-hover);
+}
+
+  
+.btn-delete-item {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+}
+
+/*----- FORMS -----*/
 
 form {
   text-align: left;
@@ -27,36 +75,13 @@ fieldset legend {
 input[type="number"] {
   text-align: right;
 }
+
+/*----- FORM: BUDGET FORM -----*/
+
 .form-budget .grid {
   grid-template-columns: 40% auto 40px 70px
 }
 
-.btn-add-item,
-.btn-delete-item {
-  font-size: 2rem;
-  height: 62px;
-  line-height: 0;
-  text-align: center;
-  width: 70px;
-}
-
-.btn-add-item {
-  background-color: var(--color-green);
-  border-color: var(--color-green);
-}
-
-.btn-delete-item {
-  background-color: var(--color-red);
-  border-color: var(--color-red);
-}
-
-span.currency {
+.form-budget span.currency {
   line-height: 3rem;
-}
-
-big {
-  display: block;
-  font-size: 3rem;
-  font-weight: bold;
-  text-align: center;
 }
