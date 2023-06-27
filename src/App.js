@@ -1,5 +1,6 @@
-import "./App.css";
-import "./pico.min.css";
+import "./css/pico.min.css";
+import "./css/grid.css";
+import "./css/App.css";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import HomePage from "./pages/HomePage";
