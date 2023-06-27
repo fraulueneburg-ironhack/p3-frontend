@@ -1,0 +1,62 @@
+:root {
+  --form-label-font-weight: bold;
+  --color-red: #e53935;
+  --color-green: #7cb342;
+}
+
+body {
+  text-align: center;
+  padding-bottom: 3rem;
+}
+
+form {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+fieldset legend {
+  border-bottom: 3px solid var(--form-element-border-color);
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 0 0.5rem;
+  width: 100%;
+}
+
+input[type="number"] {
+  text-align: right;
+}
+.form-budget .grid {
+  grid-template-columns: 40% auto 40px 70px
+}
+
+.btn-add-item,
+.btn-delete-item {
+  font-size: 2rem;
+  height: 62px;
+  line-height: 0;
+  text-align: center;
+  width: 70px;
+}
+
+.btn-add-item {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+}
+
+.btn-delete-item {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+}
+
+span.currency {
+  line-height: 3rem;
+}
+
+big {
+  display: block;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
