@@ -29,15 +29,22 @@ function BudgetForm() {
 
   //function for calculating Budget
   function calculateBudget(savings, expenses, earnings) {
-    console.log(earnings);
-    /*  const copy = JSON.parse(JSON.stringify(earnings));
-    
-    const result = copy.reduce(function (acc, obj) {
+    const earningsTotal = earnings.reduce(function (acc, obj) {
       return acc + obj.amount;
     }, 0);
-    console.log(result); */
+    const expensesTotal = expenses.reduce(function (acc, obj) {
+      return acc + obj.amount;
+    }, 0);
+    const savingTotal = savings.reduce(function (acc, obj) {
+      return acc + obj.amount;
+    }, 0);
+
+    const result = earningsTotal - expensesTotal - savingTotal;
+    console.log(result, budget);
+    setBudget(result);
+    return result;
   }
-  calculateBudget();
+  calculateBudget(savings, expenses, earnings);
 
   //functions for expenses section
   const handleExpenseAmountChange = (index, e) => {
@@ -300,7 +307,7 @@ function BudgetForm() {
         </fieldset>
         <fieldset>
           <legend>Your monthly budget:</legend>
-          <big>10.300,00€</big>
+          <big>{budget}</big>
         </fieldset>
         <button>Start planning</button>
       </form>
