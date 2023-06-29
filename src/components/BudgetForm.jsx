@@ -24,31 +24,22 @@ function BudgetForm() {
 
     const currency = userObj.currency;
 
-
     const handleChange = (e) => {
-
-        //you need the name of the input here
-        //this is the value of what you typed in the input
-        //spread the object to take everything that doesn't match the input name
-        //setUserObj({ ...userObj, [inputName]: inputValue });
         let inputName = e.target.name;
         let inputValue = e.target.value;
+        let parent = e.target.parentElement.parentElement.id;
+
         if (inputName === "currency") {
             setUserObj({ ...userObj, [inputName]: inputValue })
         }
         else {
-            const parent = e.target.parentElement.parentElement.id;
+            //setUserObj({ ...userObj, [parent[0]]: { ...userObj.parent, amount: 999 } })
+            setUserObj({
+                ...userObj, [parent]: { ...userObj.expenses, 0: { name: inputName, amount: inputValue } }
+            })
 
-            console.log("INPUT NAME", inputName)
-            console.log("PARENT", parent)
-            //setUserObj({ ...userObj.expenses, userObj.expenses[inputName]: inputValue })
-
+            console.log("USER OBJ", userObj);
         }
-        //setUserObj({ ...userObj, [inputName]: inputValue });
-        console.log("NAME", inputName)
-        console.log("VALUE", inputValue)
-        console.log("THE USER OBJ", userObj);
-
     };
 
     return (
