@@ -316,7 +316,7 @@ function BudgetForm() {
         </fieldset>
         <fieldset>
           <legend>Your monthly budget:</legend>
-          <big>{budget}</big>
+          <big>{budget} <span className="currency">{`${currency}`}</span></big>
         </fieldset>
         <button>Start planning</button>
       </form>
