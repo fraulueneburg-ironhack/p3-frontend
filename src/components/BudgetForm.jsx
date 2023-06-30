@@ -181,6 +181,7 @@ function BudgetForm() {
         <fieldset id="earnings">
           <legend>Your earnings</legend>
           <div className="card">
+            {earnings.length <= 0 ? <p style={{ textAlign: 'center', marginBottom: '0' }}>No earnings yet. Start adding some.</p> : null}
             {earnings.map((earning, index) => {
               return (
                 <div key={index} className="grid">
@@ -225,6 +226,7 @@ function BudgetForm() {
         <fieldset id="expenses">
           <legend>Your expenses</legend>
           <div className="card">
+            {expenses.length <= 0 ? <p style={{ textAlign: 'center', marginBottom: '0' }}>No expenses yet. Start adding some.</p> : null}
             {expenses.map((expense, index) => {
               return (
                 <div key={index} className="grid">
@@ -273,8 +275,9 @@ function BudgetForm() {
         </fieldset>
 
         <fieldset id="savings">
-          <legend>Your saving goals</legend>
+          <legend>Your monthly saving goals</legend>
           <div className="card">
+            {savings.length <= 0 ? <p style={{ textAlign: 'center', marginBottom: '0' }}>No monthly saving goals yet. Start adding some.</p> : null}
             {savings.map((saving, index) => {
               return (
                 <div key={index} className="grid">
@@ -330,7 +333,7 @@ function BudgetForm() {
           <big>{budget}</big>
         </fieldset>
         <button>Start planning</button>
-      </form>
+      </form >
     </>
   );
 }
