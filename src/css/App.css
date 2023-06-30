@@ -24,6 +24,18 @@ body {
   padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
 }
 
+.card-empty-text {
+  text-align: center;
+}
+
+.card-empty-text * {
+  margin-bottom: 0;
+}
+
+.card-empty-text img {
+  margin-bottom: 1rem;
+}
+
 form .card {
   margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
 }
