@@ -28,6 +28,17 @@ form .card {
   margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
 }
 
+form .card + .grid {
+  padding-left: var(--block-spacing-horizontal);
+  padding-right: var(--block-spacing-horizontal);
+}
+
+form .card > .grid:last-child label,
+form .card > .grid:last-child input,
+form .card > .grid:last-child button {
+  margin-bottom: 0;
+}
+
 /*----- TYPOGRAPHY -----*/
 
 big {

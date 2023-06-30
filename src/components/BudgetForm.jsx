@@ -12,7 +12,7 @@ function BudgetForm() {
 
   // EARNINGS STATES 
   const [earnings, setEarnings] = useState([
-    { name: "monthly earnings", amount: 0 },
+    { name: "salary", amount: 0 },
   ]);
   const [earningsTotal, setEarningsTotal] = useState(calculateTotal(earnings));
   const [newEarningName, setNewEarningName] = useState("");
@@ -39,7 +39,7 @@ function BudgetForm() {
   // MONTHLY BUDGET STATE
   const [budget, setBudget] = useState(earningsTotal - expensesTotal - savingsTotal);
 
-  // functions for Earnings section 
+  // EARNINGS FUNCTIONS
   const handleEarningAmountChange = (index, e) => {
     const newEarnings = [...earnings];
     newEarnings[index].amount = Number(e.target.value);
@@ -81,7 +81,8 @@ function BudgetForm() {
     setBudget((calculateTotal(filteredEarnings)) - expensesTotal - savingsTotal);
   };
 
-  // functions for expenses section 
+
+  // EXPENSES FUNCTIONS
   const handleExpenseAmountChange = (index, e) => {
     const newExpenses = [...expenses];
     newExpenses[index].amount = Number(e.target.value);
@@ -122,7 +123,7 @@ function BudgetForm() {
     setBudget(earningsTotal - (calculateTotal(filteredExpenses)) - savingsTotal);
   };
 
-  // section for savings section 
+  // SAVINGS FUNCTIONS
   const handleSavingAmountChange = (index, e) => {
     const newSavings = [...savings];
     newSavings[index].amount = Number(e.target.value);
@@ -162,6 +163,8 @@ function BudgetForm() {
     setSavingsTotal((calculateTotal(filteredSavings)));
     setBudget(earningsTotal - expensesTotal - (calculateTotal(filteredSavings)));
   };
+
+  // BUDGET FORM
 
   return (
     <>
