@@ -16,6 +16,18 @@ body {
   padding-bottom: 3rem;
 }
 
+.card {
+  background: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-box-shadow);
+  margin: var(--block-spacing-vertical) 0;
+  padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+}
+
+form .card {
+  margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
+}
+
 /*----- TYPOGRAPHY -----*/
 
 big {
@@ -70,6 +82,26 @@ fieldset legend {
   margin-bottom: 1.5rem;
   padding: 1rem 0 0.5rem;
   width: 100%;
+}
+
+.input-group {
+  display: flex;
+}
+
+.input-group-text {
+  background-color: var(--form-element-disabled-background-color);
+  border: var(--border-width) solid var(--form-element-border-color);
+  border-right: 0;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  display: block;
+  height: calc(1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 + var(--border-width) * 2);
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+}
+
+.input-group-text + input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 input[type="number"] {
