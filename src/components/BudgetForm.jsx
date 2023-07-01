@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import earningsGif from "../assets/gif-earnings.gif"
-import expensesGif from "../assets/gif-expenses.gif"
-//import savingsGif from "../assets/gif-savings.gif"
+import earningsGif from "../assets/gif-no-earnings.gif"
+import expensesGif from "../assets/gif-no-expenses.gif"
+import spendingsGif from "../assets/gif-no-spendings.gif"
+//import savingsGif from "../assets/gif-no-savings.gif"
 import axios from 'axios'
 
 function BudgetForm() {
   const navigate = useNavigate();
 
   // GENERAL FUNCTIONS
+
   const calculateTotal = (arr) => {
     return arr.reduce((acc, curr) => {
       return acc + curr.amount
@@ -16,15 +18,18 @@ function BudgetForm() {
   }
 
   // CURRENCY STATES
+
   const [currency, setCurrency] = useState('€')
 
   // EARNINGS STATES
+
   const [earnings, setEarnings] = useState([{ name: 'salary', amount: 0 }])
   const [earningsTotal, setEarningsTotal] = useState(calculateTotal(earnings))
   const [newEarningName, setNewEarningName] = useState('')
   const [newEarningAmount, setNewEarningAmount] = useState(0)
 
   // EXPENSES STATES
+
   const [expenses, setExpenses] = useState([
     { name: 'rent', amount: 0 },
     { name: 'electricity', amount: 0 },
@@ -35,23 +40,27 @@ function BudgetForm() {
   const [newExpenseAmount, setNewExpenseAmount] = useState(0)
 
   // SPENDING CATEGORIES STATES
-  const [spendingCats, setSpendingCats] = useState(['Food', 'Hobbies', 'Activities', 'Presents', 'Other'])
+
+  const [spendingCats, setSpendingCats] = useState(['Food', 'Hobbies', 'Activities', 'Other'])
   const [newSpendingCatName, setNewSpendingCatName] = useState('')
 
   // SAVINGS STATES
+
   const savingsTotal = 0;
   // const [savings, setSavings] = useState([{ name: 'My saving goal', amount: 0 }])
   // const [savingsTotal, setSavingsTotal] = useState(calculateTotal(savings))
   // const [newSavingName, setNewSavingName] = useState('')
-  // const [newSavingAmount, setNewSavingAmount] = useState(0)
+  // const [newSavingAmount, setNewSavingAmount] = useState('')
 
   // MONTHLY BUDGET STATE
+
   const [budget, setBudget] = useState(earningsTotal - expensesTotal - savingsTotal)
 
   // EARNINGS FUNCTIONS
-  const handleEarningAmountChange = (index, e) => {
+
+  const handleEarningAmountChange = (index, event) => {
     const newEarnings = [...earnings]
-    newEarnings[index].amount = Number(e.target.value)
+    newEarnings[index].amount = Number(event.target.value)
     setEarnings(newEarnings)
     setEarningsTotal(calculateTotal(earnings))
     setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal)
@@ -77,11 +86,11 @@ function BudgetForm() {
     setEarningsTotal(calculateTotal([...earnings, newEarning]))
     setBudget(calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal)
     setNewEarningName('')
-    setNewEarningAmount(0)
+    setNewEarningAmount('')
   }
 
-  const handleDeleteEarning = (index, e) => {
-    e.preventDefault()
+  const handleDeleteEarning = (index, event) => {
+    event.preventDefault()
     const filteredEarnings = earnings.filter((elem, i) => {
       if (i !== index) return elem
     })
@@ -91,13 +100,15 @@ function BudgetForm() {
   }
 
   // EXPENSES FUNCTIONS
-  const handleExpenseAmountChange = (index, e) => {
+
+  const handleExpenseAmountChange = (index, event) => {
     const newExpenses = [...expenses]
-    newExpenses[index].amount = Number(e.target.value)
+    newExpenses[index].amount = Number(event.target.value)
     setExpenses(newExpenses)
     setExpensesTotal(calculateTotal(newExpenses))
     setBudget(earningsTotal - calculateTotal(newExpenses) - savingsTotal)
   }
+
   const handleNewExpenseNameChange = (event) => {
     setNewExpenseName(event.target.value)
   }
@@ -118,11 +129,11 @@ function BudgetForm() {
     setExpensesTotal(calculateTotal([...expenses, newExpense]))
     setBudget(earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal)
     setNewExpenseName('')
-    setNewExpenseAmount(0)
+    setNewExpenseAmount('')
   }
 
-  const handleDeleteExpense = (index, e) => {
-    e.preventDefault()
+  const handleDeleteExpense = (index, event) => {
+    event.preventDefault()
     const filteredExpenses = expenses.filter((elem, i) => {
       if (i !== index) return elem
     })
@@ -132,9 +143,9 @@ function BudgetForm() {
   }
 
   // SAVINGS FUNCTIONS
-  // const handleSavingAmountChange = (index, e) => {
+  // const handleSavingAmountChange = (index, event) => {
   //   const newSavings = [...savings]
-  //   newSavings[index].amount = Number(e.target.value)
+  //   newSavings[index].amount = Number(event.target.value)
   //   setSavings(newSavings)
   //   setSavingsTotal(calculateTotal(newSavings))
   //   setBudget(earningsTotal - expensesTotal - calculateTotal(newSavings))
@@ -159,11 +170,11 @@ function BudgetForm() {
   //   setSavingsTotal(calculateTotal([...savings, newSaving]))
   //   setBudget(earningsTotal - expensesTotal - calculateTotal([...savings, newSaving]))
   //   setNewSavingName('')
-  //   setNewSavingAmount(0)
+  //   setNewSavingAmount('')
   // }
 
-  // const handleDeleteSaving = (index, e) => {
-  //   e.preventDefault()
+  // const handleDeleteSaving = (index, event) => {
+  //   event.preventDefault()
   //   const filteredSavings = savings.filter((elem, i) => {
   //     if (i !== index) return elem
   //   })
@@ -185,8 +196,8 @@ function BudgetForm() {
     setNewSpendingCatName('')
   }
 
-  const handleDeleteSpendingCat = (index, e) => {
-    e.preventDefault()
+  const handleDeleteSpendingCat = (index, event) => {
+    event.preventDefault()
     const filteredSpendingCats = spendingCats.filter((elem, i) => {
       if (i !== index) return elem
     })
@@ -195,8 +206,8 @@ function BudgetForm() {
 
   // BUDGET SUBMIT FUNCTIONS
 
-  const handleSubmitBudget = async (e) => {
-    e.preventDefault();
+  const handleSubmitBudget = async (event) => {
+    event.preventDefault();
 
     try {
       await axios.post("http://localhost:5005/budget/create", {
@@ -218,7 +229,7 @@ function BudgetForm() {
       <form onSubmit={handleSubmitBudget} className="form-budget">
         <fieldset>
           <legend>Your currency</legend>
-          <select name="currency" onChange={(e) => setCurrency(e.target.value)}>
+          <select name="currency" onChange={(event) => setCurrency(event.target.value)}>
             <option value="€">€</option>
             <option value="US$">US$</option>
             <option value="GBP">GBP</option>
@@ -243,13 +254,14 @@ function BudgetForm() {
                   <label>{earning.name}</label>
                   <input
                     type="number"
+                    placeholder="0"
                     min="0"
                     value={earning.amount}
                     name={earning.name}
-                    onChange={(e) => handleEarningAmountChange(index, e)}
+                    onChange={(event) => handleEarningAmountChange(index, event)}
                   />
                   <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(e) => handleDeleteEarning(index, e)}>
+                  <button className="btn-delete-item" onClick={(event) => handleDeleteEarning(index, event)}>
                     –
                   </button>
                 </div>
@@ -258,7 +270,7 @@ function BudgetForm() {
           </div>
           <div className="grid">
             <input type="text" value={newEarningName} onChange={handleNewEarningNameChange} placeholder="name" />
-            <input type="number" min="0" value={newEarningAmount} onChange={handleNewEarningAmountChange} />
+            <input type="number" placeholder="0" min="0" value={newEarningAmount} onChange={handleNewEarningAmountChange} />
             <span className="currency">{`${currency}`}</span>
             <button className="btn-add-item" onClick={handleAddEarning}>
               +
@@ -286,14 +298,15 @@ function BudgetForm() {
                     <span className="input-group-text">-</span>
                     <input
                       type="number"
+                      placeholder="0"
                       min="0"
                       value={expense.amount}
                       name={expense.name}
-                      onChange={(e) => handleExpenseAmountChange(index, e)}
+                      onChange={(event) => handleExpenseAmountChange(index, event)}
                     />
                   </div>
                   <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(e) => handleDeleteExpense(index, e)}>
+                  <button className="btn-delete-item" onClick={(event) => handleDeleteExpense(index, event)}>
                     –
                   </button>
                 </div>
@@ -304,7 +317,8 @@ function BudgetForm() {
             <input type="text" value={newExpenseName} onChange={handleNewExpenseNameChange} placeholder="name" />
             <div className="input-group">
               <span className="input-group-text">-</span>
-              <input type="number" min="0" value={newExpenseAmount} onChange={handleNewExpenseAmountChange} />
+              <input type="number"
+                placeholder="0" min="0" value={newExpenseAmount} onChange={handleNewExpenseAmountChange} />
             </div>
             <span className="currency">{`${currency}`}</span>
             <button className="btn-add-item" onClick={handleAddExpense}>
@@ -333,14 +347,15 @@ function BudgetForm() {
                     <span className="input-group-text">-</span>
                     <input
                       type="number"
+                      placeholder="0"
                       min="0"
                       value={saving.amount}
                       name={saving.name}
-                      onChange={(e) => handleSavingAmountChange(index, e)}
+                      onChange={(event) => handleSavingAmountChange(index, event)}
                     />
                   </div>
                   <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(e) => handleDeleteSaving(index, e)}>
+                  <button className="btn-delete-item" onClick={(event) => handleDeleteSaving(index, event)}>
                     –
                   </button>
                 </div>
@@ -351,7 +366,7 @@ function BudgetForm() {
             <input type="text" value={newSavingName} onChange={handleNewSavingNameChange} placeholder="name" />
             <div className="input-group">
               <span className="input-group-text">-</span>
-              <input type="number" min="0" value={newSavingAmount} onChange={handleNewSavingAmountChange} />
+              <input type="number" placeholder="0" min="0" value={newSavingAmount} onChange={handleNewSavingAmountChange} />
             </div>
             <span className="currency">{`${currency}`}</span>
             <button className="btn-add-item" onClick={handleAddSaving}>
@@ -360,12 +375,17 @@ function BudgetForm() {
           </div>
         </fieldset> */}
 
+        <fieldset>
+          <legend>Your monthly budget:</legend>
+          <big>{budget} <span className="currency">{`${currency}`}</span></big>
+        </fieldset>
+
         <fieldset id="spendingCats">
           <legend>Your spending categories</legend>
           <div className="card">
             {spendingCats.length <= 0 ? (
               <div className="card-empty-text">
-                <img src={expensesGif} alt="" width="300" />
+                <img src={spendingsGif} alt="" width="300" />
                 <h4>No spending categories yet.</h4>
                 <p>
                   Start adding some via the form below.
@@ -375,8 +395,8 @@ function BudgetForm() {
             {spendingCats.map((spendingCat, index) => {
               return (
                 <div key={index} className="grid">
-                  <label>{spendingCat}</label>
-                  <button className="btn-delete-item" onClick={(e) => handleDeleteSpendingCat(index, e)}>
+                  <strong>{spendingCat}</strong>
+                  <button className="btn-delete-item" onClick={(event) => handleDeleteSpendingCat(index, event)}>
                     –
                   </button>
                 </div>
@@ -391,10 +411,6 @@ function BudgetForm() {
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend>Your monthly budget:</legend>
-          <big>{budget} <span className="currency">{`${currency}`}</span></big>
-        </fieldset>
         <button>Start planning</button>
       </form>
     </>

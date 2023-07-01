@@ -32,8 +32,12 @@ body {
   margin-bottom: 0;
 }
 
-.card-empty-text img {
+.card-empty-text img:first-child {
   margin-bottom: 1rem;
+}
+
+.card-empty-text img:last-child {
+  margin-top: 1rem;
 }
 
 form .card {
@@ -94,7 +98,6 @@ big {
 
 form {
   text-align: left;
-  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -145,6 +148,29 @@ input[type="number"] {
   line-height: 3rem;
 }
 
+/*----- FORM: DAILY EXPENSES FORM -----*/
+
+.form-daily-expenses .grid {
+  grid-template-columns: auto auto auto auto 70px
+}
+
+/*----- TABLE DAILY EXPENSES -----*/
+
+.table-daily-expenses th:last-child,
+.table-daily-expenses tr:last-child {
+  text-align: right;
+}
+
+.table-daily-expenses button {
+  font-size: 1rem;
+  font-weight: bold;
+  height: 2rem;
+  line-height: 0;
+  margin: 0 0 0 auto;
+  padding: 0;
+  width: 2rem;
+}
+
 /*----- HEADER -----*/
 
 header {
@@ -156,4 +182,13 @@ header {
 header button {
   margin: 0 0 0 1rem;
   width: auto;
+}
+
+/*----- MAIN -----*/
+
+main,
+main.container {
+  max-width: 800px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
