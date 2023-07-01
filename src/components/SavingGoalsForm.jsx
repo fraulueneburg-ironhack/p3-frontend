@@ -1,9 +1,11 @@
 import { useState } from "react";
 import savingGoalsGif from "../assets/gif-no-savings.gif"
 
+// this is just test data. we should delete it later
+
 function SavingGoalsForm() {
     const [savingGoalsArr, setSavingGoalsArr] = useState([{
-        name: "Porsche",
+        name: "Horse",
         amount: 10000,
         amountSaved: 5,
         time: 2,
@@ -17,8 +19,8 @@ function SavingGoalsForm() {
         timeUnit: "years",
         isReached: true,
     }, {
-        name: "Yacht",
-        amount: 100000,
+        name: "Private Island",
+        amount: 10000000,
         amountSaved: 339.23,
         time: 3,
         timeUnit: "years",
@@ -129,6 +131,9 @@ function SavingGoalsForm() {
                     <tbody>
                     </tbody>
                 </table>
+
+                {/* ----- DISPLAYING THE COMPLETED GOALS DOESN'T WORK YET ----- */}
+
                 {savingGoalsArr.filter((savingGoal, index) => {
                     if (savingGoal.isReached === true) {
                         {/* return (

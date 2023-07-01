@@ -6,7 +6,7 @@ import SavingGoalsForm from "../components/SavingGoalsForm"
 function SavingGoals() {
     return (
         <>
-            <h1>Saving Goals</h1>
+            <h1>Your current Saving Goals:</h1>
             <SavingGoalsForm />
         </>
     )
