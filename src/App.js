@@ -16,22 +16,17 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/auth/signup" element={<SignupPage />}></Route>
-          <Route
-            path="/auth/profile"
-            element={
-              <PrivatePage>
-                <ProfilePage />
-              </PrivatePage>
-            }
+          <Route path="/auth/profile" element={
+            <PrivatePage>
+              <ProfilePage />
+            </PrivatePage>
+          }
           />
-          <Route
-            path="/auth/budget"
-            element={
-              <PrivatePage>
-                <h1>test</h1>
-                <BudgetOverview />
-              </PrivatePage>
-            }
+          <Route path="/auth/budget" element={
+            <PrivatePage>
+              <BudgetOverview />
+            </PrivatePage>
+          }
           />
         </Route>
       </Routes>
