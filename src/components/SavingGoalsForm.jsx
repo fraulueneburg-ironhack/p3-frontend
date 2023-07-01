@@ -9,21 +9,18 @@ function SavingGoalsForm() {
         amount: 10000,
         amountSaved: 5,
         time: 2,
-        timeUnit: "months",
         isReached: false,
     }, {
         name: "Canoe",
         amount: 900,
         amountSaved: 339.23,
         time: 3,
-        timeUnit: "years",
         isReached: true,
     }, {
         name: "Private Island",
         amount: 10000000,
         amountSaved: 339.23,
         time: 3,
-        timeUnit: "years",
         isReached: true,
     }]);
 
@@ -34,7 +31,6 @@ function SavingGoalsForm() {
             amount: event.target.amount.value,
             amountSaved: 0,
             time: event.target.time.value,
-            timeUnit: event.target.timeUnit.value,
             isReached: false,
         }
         setSavingGoalsArr([newSavingGoal, ...savingGoalsArr])
@@ -81,7 +77,7 @@ function SavingGoalsForm() {
                                         <td>{savingGoal.amountSaved}</td>
                                         <td>{savingGoal.amount - savingGoal.amountSaved}</td>
                                         <td>{savingGoal.name}</td>
-                                        <td>{savingGoal.time} {savingGoal.timeUnit}</td>
+                                        <td>{savingGoal.time} months</td>
                                         <td>
                                             <button className="btn-delete-item" onClick={(event) => handleDeleteSavingGoal(index, event)}>
                                                 –
@@ -98,23 +94,23 @@ function SavingGoalsForm() {
                 <div className="grid">
                     <div>
                         <label>I want to save</label>
-                        <input type="number" name="amount" placeholder="0,00"></input>
+                        <input type="number" name="amount" placeholder="0,00" required></input>
                     </div>
                     <div>
                         <label>for a</label>
-                        <input type="text" name="name" placeholder="name"></input>
+                        <input type="text" name="name" placeholder="name" required></input>
                     </div>
                 </div>
                 <div>
                     <label>over a period of</label>
                     <div className="grid">
-                        <input type="number" name="time" placeholder="0"></input>
-                        <select name="timeUnit">
-                            <option>months</option>
-                            <option>weeks</option>
-                            <option>years</option>
-                        </select>
+                        <input type="number" name="time" placeholder="0" required></input>
+                        <p>months</p>
                     </div>
+                </div>
+                <div>
+                    <label>which is</label>
+                    <big>___ € / month</big>
                 </div>
                 <button>add saving goal</button>
             </form>
@@ -140,7 +136,7 @@ function SavingGoalsForm() {
                             <tr key={savingGoal.index}>
                                 <td><strong>{savingGoal.amount}</strong></td>
                                 <td>{savingGoal.name}</td>
-                                <td>{savingGoal.time} {savingGoal.timeUnit}</td>
+                                <td>{savingGoal.time} months</td>
                             </tr>
                         ) */}
                     }
