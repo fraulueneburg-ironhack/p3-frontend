@@ -180,7 +180,7 @@ function BudgetForm() {
 
   const handleAddSpendingCat = (event) => {
     event.preventDefault()
-    const newSpendingCat = { newSpendingCatName }
+    const newSpendingCat = newSpendingCatName;
     setSpendingCats([...spendingCats, newSpendingCat])
     setNewSpendingCatName('')
   }
