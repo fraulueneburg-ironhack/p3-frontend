@@ -11,8 +11,8 @@ function Navbar() {
         {isLoggedIn ?
           <ul>
             <li><NavLink to="/">Home</NavLink></li>
-            <li><NavLink to="/auth/profile">My Profile</NavLink></li>
-            <li><NavLink to="/auth/budget">Budget</NavLink></li>
+            <li><NavLink to="/profile">My Profile</NavLink></li>
+            <li><NavLink to="/budget">Budget</NavLink></li>
           </ul>
           :
           <ul>
@@ -21,8 +21,7 @@ function Navbar() {
           </ul>
         }
       </nav>
-      {isLoggedIn ? <button onClick={logOutUser}>Logout </button> : null
-      }
+      {isLoggedIn ? <button onClick={logOutUser}>Logout</button> : null}
     </>
   );
 }

@@ -16,13 +16,13 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/auth/signup" element={<SignupPage />}></Route>
-          <Route path="/auth/profile" element={
+          <Route path="/profile" element={
             <PrivatePage>
               <ProfilePage />
             </PrivatePage>
           }
           />
-          <Route path="/auth/budget" element={
+          <Route path="/budget" element={
             <PrivatePage>
               <BudgetOverview />
             </PrivatePage>

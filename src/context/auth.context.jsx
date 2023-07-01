@@ -22,7 +22,6 @@ const AuthContextWrapper = (props) => {
             token: gotToken,
           },
         });
-        console.log("response from verify route", data);
         setUser(data.user);
         setIsLoggedIn(true);
         setIsLoading(false);
@@ -42,8 +41,6 @@ const AuthContextWrapper = (props) => {
     localStorage.removeItem("authToken");
   };
   const logOutUser = () => {
-    // To log out the user, remove the token
-    console.log("session destroyed");
     removeToken();
     authenticateUser();
   };

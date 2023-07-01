@@ -19,10 +19,10 @@ function SignupPage() {
       setNameInput("");
       setEmailInput("");
       setPasswordInput("");
-      navigate("/auth/budget");
-      console.log(create);
+      navigate("/budget");
     } catch (err) {
-      console.log("im in the catch block", emailInput);
+      console.log("im in the catch block");
+      console.log("THIS IS THE ERR", err);
       setNameInput("");
       setEmailInput("");
       setPasswordInput("");
