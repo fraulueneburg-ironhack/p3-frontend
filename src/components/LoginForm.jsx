@@ -1,23 +1,30 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/auth.context";
 
 function LoginForm() {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const navigate = useNavigate();
+  const { setToken, authenticateUser, setIsLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const create = await axios.post("http://localhost:3000/api/users", {
-        emailInput,
-        passwordInput,
+      const { data } = await axios.post("http://localhost:5005/auth/login", {
+        email: emailInput,
+        password: passwordInput,
       });
+
+      const actualToken = data.authToken;
+      setToken(actualToken);
+      authenticateUser();
+      setIsLoggedIn(true);
       setEmailInput("");
       setPasswordInput("");
-      navigate("/auth/profile");
-      console.log(create);
+      navigate("/auth/budget");
     } catch (err) {
       console.log("im in the catch block", emailInput);
       setEmailInput("");

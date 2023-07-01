@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import BudgetOverview from "./pages/BudgetOverview";
+import PrivatePage from "./pages/PrivatePage";
 
 function App() {
   return (
@@ -15,8 +16,23 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/auth/signup" element={<SignupPage />}></Route>
-          <Route path="/auth/profile" element={<ProfilePage />}></Route>
-          <Route path="/auth/budget" element={<BudgetOverview />}></Route>
+          <Route
+            path="/auth/profile"
+            element={
+              <PrivatePage>
+                <ProfilePage />
+              </PrivatePage>
+            }
+          />
+          <Route
+            path="/auth/budget"
+            element={
+              <PrivatePage>
+                <h1>test</h1>
+                <BudgetOverview />
+              </PrivatePage>
+            }
+          />
         </Route>
       </Routes>
     </div>
