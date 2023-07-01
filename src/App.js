@@ -8,6 +8,7 @@ import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import BudgetOverview from "./pages/BudgetOverview";
 import PrivatePage from "./pages/PrivatePage";
+import SavingGoals from "./pages/SavingGoals";
 
 function App() {
   return (
@@ -25,6 +26,12 @@ function App() {
           <Route path="/budget" element={
             <PrivatePage>
               <BudgetOverview />
+            </PrivatePage>
+          }
+          />
+          <Route path="/saving-goals" element={
+            <PrivatePage>
+              <SavingGoals />
             </PrivatePage>
           }
           />
