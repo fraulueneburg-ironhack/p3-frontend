@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import earningsGif from "../assets/gif-earnings.gif"
 import expensesGif from "../assets/gif-expenses.gif"
 import savingsGif from "../assets/gif-savings.gif"
+import axios from 'axios'
 
 function BudgetForm() {
+  const navigate = useNavigate();
+
   // GENERAL FUNCTIONS
   const calculateTotal = (arr) => {
     return arr.reduce((acc, curr) => {
@@ -163,11 +167,29 @@ function BudgetForm() {
     setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
   }
 
+  // BUDGET SUBMIT FUNCTIONS
+
+  const handleSubmitBudget = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:5005/budget/create", {
+        currency: currency,
+        earnings: earnings,
+        expenses: expenses,
+      });
+      navigate("/budget");
+    } catch (err) {
+      console.log("im in the catch block");
+      console.log("THIS IS THE ERR", err)
+    }
+  };
+
   // BUDGET FORM
 
   return (
     <>
-      <form className="form-budget">
+      <form onSubmit={handleSubmitBudget} className="form-budget">
         <fieldset>
           <legend>Your currency</legend>
           <select name="currency" onChange={(e) => setCurrency(e.target.value)}>
