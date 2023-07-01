@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import earningsGif from "../assets/gif-earnings.gif"
 import expensesGif from "../assets/gif-expenses.gif"
-import savingsGif from "../assets/gif-savings.gif"
+//import savingsGif from "../assets/gif-savings.gif"
 import axios from 'axios'
 
 function BudgetForm() {
@@ -35,10 +35,11 @@ function BudgetForm() {
   const [newExpenseAmount, setNewExpenseAmount] = useState(0)
 
   // SAVINGS STATES
-  const [savings, setSavings] = useState([{ name: 'My saving goal', amount: 0 }])
-  const [savingsTotal, setSavingsTotal] = useState(calculateTotal(savings))
-  const [newSavingName, setNewSavingName] = useState('')
-  const [newSavingAmount, setNewSavingAmount] = useState(0)
+  const savingsTotal = 0;
+  // const [savings, setSavings] = useState([{ name: 'My saving goal', amount: 0 }])
+  // const [savingsTotal, setSavingsTotal] = useState(calculateTotal(savings))
+  // const [newSavingName, setNewSavingName] = useState('')
+  // const [newSavingAmount, setNewSavingAmount] = useState(0)
 
   // MONTHLY BUDGET STATE
   const [budget, setBudget] = useState(earningsTotal - expensesTotal - savingsTotal)
@@ -127,45 +128,45 @@ function BudgetForm() {
   }
 
   // SAVINGS FUNCTIONS
-  const handleSavingAmountChange = (index, e) => {
-    const newSavings = [...savings]
-    newSavings[index].amount = Number(e.target.value)
-    setSavings(newSavings)
-    setSavingsTotal(calculateTotal(newSavings))
-    setBudget(earningsTotal - expensesTotal - calculateTotal(newSavings))
-  }
-  const handleNewSavingNameChange = (event) => {
-    setNewSavingName(event.target.value)
-  }
+  // const handleSavingAmountChange = (index, e) => {
+  //   const newSavings = [...savings]
+  //   newSavings[index].amount = Number(e.target.value)
+  //   setSavings(newSavings)
+  //   setSavingsTotal(calculateTotal(newSavings))
+  //   setBudget(earningsTotal - expensesTotal - calculateTotal(newSavings))
+  // }
+  // const handleNewSavingNameChange = (event) => {
+  //   setNewSavingName(event.target.value)
+  // }
 
-  const handleNewSavingAmountChange = (event) => {
-    setNewSavingAmount(Number(event.target.value))
-    setSavingsTotal(calculateTotal(savings))
-    setBudget(earningsTotal - expensesTotal - calculateTotal(savings))
-  }
+  // const handleNewSavingAmountChange = (event) => {
+  //   setNewSavingAmount(Number(event.target.value))
+  //   setSavingsTotal(calculateTotal(savings))
+  //   setBudget(earningsTotal - expensesTotal - calculateTotal(savings))
+  // }
 
-  const handleAddSaving = (event) => {
-    event.preventDefault()
-    const newSaving = {
-      name: newSavingName,
-      amount: newSavingAmount,
-    }
-    setSavings([...savings, newSaving])
-    setSavingsTotal(calculateTotal([...savings, newSaving]))
-    setBudget(earningsTotal - expensesTotal - calculateTotal([...savings, newSaving]))
-    setNewSavingName('')
-    setNewSavingAmount(0)
-  }
+  // const handleAddSaving = (event) => {
+  //   event.preventDefault()
+  //   const newSaving = {
+  //     name: newSavingName,
+  //     amount: newSavingAmount,
+  //   }
+  //   setSavings([...savings, newSaving])
+  //   setSavingsTotal(calculateTotal([...savings, newSaving]))
+  //   setBudget(earningsTotal - expensesTotal - calculateTotal([...savings, newSaving]))
+  //   setNewSavingName('')
+  //   setNewSavingAmount(0)
+  // }
 
-  const handleDeleteSaving = (index, e) => {
-    e.preventDefault()
-    const filteredSavings = savings.filter((elem, i) => {
-      if (i !== index) return elem
-    })
-    setSavings(filteredSavings)
-    setSavingsTotal(calculateTotal(filteredSavings))
-    setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
-  }
+  // const handleDeleteSaving = (index, e) => {
+  //   e.preventDefault()
+  //   const filteredSavings = savings.filter((elem, i) => {
+  //     if (i !== index) return elem
+  //   })
+  //   setSavings(filteredSavings)
+  //   setSavingsTotal(calculateTotal(filteredSavings))
+  //   setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
+  // }
 
   // BUDGET SUBMIT FUNCTIONS
 
@@ -286,7 +287,7 @@ function BudgetForm() {
           </div>
         </fieldset>
 
-        <fieldset id="savings">
+        {/* <fieldset id="savings">
           <legend>Your monthly saving goals</legend>
           <div className="card">
             {savings.length <= 0 ? (
@@ -331,7 +332,7 @@ function BudgetForm() {
               +
             </button>
           </div>
-        </fieldset>
+        </fieldset> */}
 
         <fieldset>
           <legend>Your spending categories</legend>
