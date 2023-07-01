@@ -137,6 +137,10 @@ input[type="number"] {
   grid-template-columns: 40% auto 40px 70px
 }
 
+.form-budget #spendingCats .grid {
+  grid-template-columns: auto 70px;
+}
+
 .form-budget span.currency {
   line-height: 3rem;
 }

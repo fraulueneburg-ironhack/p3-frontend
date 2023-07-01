@@ -34,6 +34,10 @@ function BudgetForm() {
   const [newExpenseName, setNewExpenseName] = useState('')
   const [newExpenseAmount, setNewExpenseAmount] = useState(0)
 
+  // SPENDING CATEGORIES STATES
+  const [spendingCats, setSpendingCats] = useState(['Food', 'Hobbies', 'Activities', 'Presents', 'Other'])
+  const [newSpendingCatName, setNewSpendingCatName] = useState('')
+
   // SAVINGS STATES
   const savingsTotal = 0;
   // const [savings, setSavings] = useState([{ name: 'My saving goal', amount: 0 }])
@@ -168,6 +172,27 @@ function BudgetForm() {
   //   setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
   // }
 
+
+  // SPENDING CATEGORIES FUNCTIONS
+  const handleNewSpendingCatNameChange = (event) => {
+    setNewSpendingCatName(event.target.value)
+  }
+
+  const handleAddSpendingCat = (event) => {
+    event.preventDefault()
+    const newSpendingCat = { newSpendingCatName }
+    setSpendingCats([...spendingCats, newSpendingCat])
+    setNewSpendingCatName('')
+  }
+
+  const handleDeleteSpendingCat = (index, e) => {
+    e.preventDefault()
+    const filteredSpendingCats = spendingCats.filter((elem, i) => {
+      if (i !== index) return elem
+    })
+    setSpendingCats(filteredSpendingCats)
+  }
+
   // BUDGET SUBMIT FUNCTIONS
 
   const handleSubmitBudget = async (e) => {
@@ -199,6 +224,7 @@ function BudgetForm() {
             <option value="GBP">GBP</option>
           </select>
         </fieldset>
+
         <fieldset id="earnings">
           <legend>Your earnings</legend>
           <div className="card">
@@ -334,9 +360,37 @@ function BudgetForm() {
           </div>
         </fieldset> */}
 
-        <fieldset>
+        <fieldset id="spendingCats">
           <legend>Your spending categories</legend>
+          <div className="card">
+            {spendingCats.length <= 0 ? (
+              <div className="card-empty-text">
+                <img src={expensesGif} alt="" width="300" />
+                <h4>No spending categories yet.</h4>
+                <p>
+                  Start adding some via the form below.
+                </p>
+              </div>
+            ) : null}
+            {spendingCats.map((spendingCat, index) => {
+              return (
+                <div key={index} className="grid">
+                  <label>{spendingCat}</label>
+                  <button className="btn-delete-item" onClick={(e) => handleDeleteSpendingCat(index, e)}>
+                    –
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+          <div className="grid">
+            <input type="text" value={newSpendingCatName} onChange={handleNewSpendingCatNameChange} placeholder="name" />
+            <button className="btn-add-item" onClick={handleAddSpendingCat}>
+              +
+            </button>
+          </div>
         </fieldset>
+
         <fieldset>
           <legend>Your monthly budget:</legend>
           <big>{budget} <span className="currency">{`${currency}`}</span></big>
