@@ -208,14 +208,17 @@ function BudgetForm() {
 
   const handleSubmitBudget = async (event) => {
     event.preventDefault();
+    const gotToken = localStorage.getItem("authToken");
 
     try {
       await axios.post("http://localhost:5005/budget/create", {
+        //user: userId,
         currency: currency,
         earnings: earnings,
         expenses: expenses,
-      });
-      navigate("/budget");
+        spendingCategories: spendingCats,
+      }, { headers: { authorization: `Bearer ${gotToken}` } });
+      navigate("/profile");
     } catch (err) {
       console.log("im in the catch block");
       console.log("THIS IS THE ERR", err)
