@@ -41,8 +41,8 @@ function BudgetForm() {
 
   // SPENDING CATEGORIES STATES
 
-  const [spendingCats, setSpendingCats] = useState(['Food', 'Hobbies', 'Activities', 'Other'])
-  const [newSpendingCatName, setNewSpendingCatName] = useState('')
+  const [spendingCategories, setSpendingCategories] = useState(['Food', 'Hobbies', 'Activities', 'Other'])
+  const [newSpendingCategoryName, setNewSpendingCategoryName] = useState('')
 
   // SAVINGS STATES
 
@@ -185,23 +185,23 @@ function BudgetForm() {
 
 
   // SPENDING CATEGORIES FUNCTIONS
-  const handleNewSpendingCatNameChange = (event) => {
-    setNewSpendingCatName(event.target.value)
+  const handleNewSpendingCategoryNameChange = (event) => {
+    setNewSpendingCategoryName(event.target.value)
   }
 
-  const handleAddSpendingCat = (event) => {
+  const handleAddSpendingCategory = (event) => {
     event.preventDefault()
-    const newSpendingCat = newSpendingCatName;
-    setSpendingCats([...spendingCats, newSpendingCat])
-    setNewSpendingCatName('')
+    const newSpendingCategory = newSpendingCategoryName;
+    setSpendingCategories([...spendingCategories, newSpendingCategory])
+    setNewSpendingCategoryName('')
   }
 
-  const handleDeleteSpendingCat = (index, event) => {
+  const handleDeleteSpendingCategory = (index, event) => {
     event.preventDefault()
-    const filteredSpendingCats = spendingCats.filter((elem, i) => {
+    const filteredSpendingCategories = spendingCategories.filter((elem, i) => {
       if (i !== index) return elem
     })
-    setSpendingCats(filteredSpendingCats)
+    setSpendingCategories(filteredSpendingCategories)
   }
 
   // BUDGET SUBMIT FUNCTIONS
@@ -216,7 +216,7 @@ function BudgetForm() {
         currency: currency,
         earnings: earnings,
         expenses: expenses,
-        spendingCategories: spendingCats,
+        spendingCategories: spendingCategories,
       }, { headers: { authorization: `Bearer ${gotToken}` } });
       navigate("/profile");
     } catch (err) {
@@ -383,10 +383,10 @@ function BudgetForm() {
           <big>{budget} <span className="currency">{`${currency}`}</span></big>
         </fieldset>
 
-        <fieldset id="spendingCats">
+        <fieldset id="spendingCategories">
           <legend>Your spending categories</legend>
           <div className="card">
-            {spendingCats.length <= 0 ? (
+            {spendingCategories.length <= 0 ? (
               <div className="card-empty-text">
                 <img src={spendingsGif} alt="" width="300" />
                 <h4>No spending categories yet.</h4>
@@ -395,11 +395,11 @@ function BudgetForm() {
                 </p>
               </div>
             ) : null}
-            {spendingCats.map((spendingCat, index) => {
+            {spendingCategories.map((spendingCategory, index) => {
               return (
                 <div key={index} className="grid">
-                  <strong>{spendingCat}</strong>
-                  <button className="btn-delete-item" onClick={(event) => handleDeleteSpendingCat(index, event)}>
+                  <strong>{spendingCategory}</strong>
+                  <button className="btn-delete-item" onClick={(event) => handleDeleteSpendingCategory(index, event)}>
                     –
                   </button>
                 </div>
@@ -407,8 +407,8 @@ function BudgetForm() {
             })}
           </div>
           <div className="grid">
-            <input type="text" value={newSpendingCatName} onChange={handleNewSpendingCatNameChange} placeholder="name" />
-            <button className="btn-add-item" onClick={handleAddSpendingCat}>
+            <input type="text" value={newSpendingCategoryName} onChange={handleNewSpendingCategoryNameChange} placeholder="name" />
+            <button className="btn-add-item" onClick={handleAddSpendingCategory}>
               +
             </button>
           </div>
