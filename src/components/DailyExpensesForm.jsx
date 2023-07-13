@@ -83,9 +83,8 @@ function DailyExpensesForm(props) {
 			amount: event.target.amount.value,
 		}
 
-		console.log('newDailyExpense', newDailyExpense)
-
 		try {
+			const gotToken = localStorage.getItem('authToken')
 			await axios.post('http://localhost:5005/budget/addexpense', newDailyExpense, {
 				headers: { authorization: `Bearer ${gotToken}` },
 			})
@@ -99,14 +98,28 @@ function DailyExpensesForm(props) {
 		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 	}
 
+	console.log('dailyExpensesArr', dailyExpensesArr)
+
 	// DELETE EXPENSE
 
-	const handleDeleteDailyExpense = (index, event) => {
+	const handleDeleteDailyExpense = async (index, event) => {
 		event.preventDefault()
 		const filteredDailyExpensesArr = dailyExpensesArr.filter((elem, i) => {
 			if (i !== index) return elem
 		})
 		setDailyExpensesArr(filteredDailyExpensesArr)
+
+		const expenseId = event.target.getAttribute('data-key')
+
+		try {
+			const gotToken = localStorage.getItem('authToken')
+			await axios.delete(`http://localhost:5005/budget/deleteexpense/${expenseId}`, {
+				headers: { authorization: `Bearer ${gotToken}` },
+			})
+			navigate('/budget')
+		} catch (err) {
+			console.log('THIS IS THE ERR', err)
+		}
 	}
 
 	return (
@@ -176,7 +189,10 @@ function DailyExpensesForm(props) {
 											-{dailyExpense.amount} {propBudgetData.currency}
 										</td>
 										<td>
-											<button className="btn-delete-item" onClick={(event) => handleDeleteDailyExpense(index, event)}>
+											<button
+												data-key={dailyExpense._id}
+												className="btn-delete-item"
+												onClick={(event) => handleDeleteDailyExpense(index, event)}>
 												–
 											</button>
 										</td>

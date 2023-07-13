@@ -187,7 +187,6 @@ function BudgetForm(props) {
 			await axios.post(
 				'http://localhost:5005/budget/create',
 				{
-					//user: userId,
 					currency: currency,
 					earnings: earnings,
 					expenses: expenses,
@@ -195,7 +194,7 @@ function BudgetForm(props) {
 				},
 				{ headers: { authorization: `Bearer ${gotToken}` } }
 			)
-			navigate('/profile')
+			navigate('/budget')
 		} catch (err) {
 			console.log('im in the catch block')
 			console.log('THIS IS THE ERR', err)
