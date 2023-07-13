@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import earningsGif from "../assets/gif-no-earnings.gif"
-import expensesGif from "../assets/gif-no-expenses.gif"
-import spendingsGif from "../assets/gif-no-spendings.gif"
+import earningsGif from "../assets/gif-no-earnings.gif";
+import expensesGif from "../assets/gif-no-expenses.gif";
+import spendingsGif from "../assets/gif-no-spendings.gif";
 //import savingsGif from "../assets/gif-no-savings.gif"
-import axios from 'axios'
+import axios from "axios";
 
 function BudgetForm() {
   const navigate = useNavigate();
@@ -13,36 +13,41 @@ function BudgetForm() {
 
   const calculateTotal = (arr) => {
     return arr.reduce((acc, curr) => {
-      return acc + curr.amount
-    }, 0)
-  }
+      return acc + curr.amount;
+    }, 0);
+  };
 
   // CURRENCY STATES
 
-  const [currency, setCurrency] = useState('€')
+  const [currency, setCurrency] = useState("€");
 
   // EARNINGS STATES
 
-  const [earnings, setEarnings] = useState([{ name: 'salary', amount: 0 }])
-  const [earningsTotal, setEarningsTotal] = useState(calculateTotal(earnings))
-  const [newEarningName, setNewEarningName] = useState('')
-  const [newEarningAmount, setNewEarningAmount] = useState(0)
+  const [earnings, setEarnings] = useState([{ name: "salary", amount: 0 }]);
+  const [earningsTotal, setEarningsTotal] = useState(calculateTotal(earnings));
+  const [newEarningName, setNewEarningName] = useState("");
+  const [newEarningAmount, setNewEarningAmount] = useState(0);
 
   // EXPENSES STATES
 
   const [expenses, setExpenses] = useState([
-    { name: 'rent', amount: 0 },
-    { name: 'electricity', amount: 0 },
-    { name: 'heating', amount: 0 },
-  ])
-  const [expensesTotal, setExpensesTotal] = useState(calculateTotal(expenses))
-  const [newExpenseName, setNewExpenseName] = useState('')
-  const [newExpenseAmount, setNewExpenseAmount] = useState(0)
+    { name: "rent", amount: 0 },
+    { name: "electricity", amount: 0 },
+    { name: "heating", amount: 0 },
+  ]);
+  const [expensesTotal, setExpensesTotal] = useState(calculateTotal(expenses));
+  const [newExpenseName, setNewExpenseName] = useState("");
+  const [newExpenseAmount, setNewExpenseAmount] = useState(0);
 
   // SPENDING CATEGORIES STATES
 
-  const [spendingCategories, setSpendingCategories] = useState(['Food', 'Hobbies', 'Activities', 'Other'])
-  const [newSpendingCategoryName, setNewSpendingCategoryName] = useState('')
+  const [spendingCategories, setSpendingCategories] = useState([
+    "Food",
+    "Hobbies",
+    "Activities",
+    "Other",
+  ]);
+  const [newSpendingCategoryName, setNewSpendingCategoryName] = useState("");
 
   // SAVINGS STATES
 
@@ -54,93 +59,99 @@ function BudgetForm() {
 
   // MONTHLY BUDGET STATE
 
-  const [budget, setBudget] = useState(earningsTotal - expensesTotal - savingsTotal)
+  const [budget, setBudget] = useState(
+    earningsTotal - expensesTotal - savingsTotal
+  );
 
   // EARNINGS FUNCTIONS
 
   const handleEarningAmountChange = (index, event) => {
-    const newEarnings = [...earnings]
-    newEarnings[index].amount = Number(event.target.value)
-    setEarnings(newEarnings)
-    setEarningsTotal(calculateTotal(earnings))
-    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal)
-  }
+    const newEarnings = [...earnings];
+    newEarnings[index].amount = Number(event.target.value);
+    setEarnings(newEarnings);
+    setEarningsTotal(calculateTotal(earnings));
+    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
+  };
 
   const handleNewEarningNameChange = (event) => {
-    setNewEarningName(event.target.value)
-  }
+    setNewEarningName(event.target.value);
+  };
 
   const handleNewEarningAmountChange = (event) => {
-    setNewEarningAmount(Number(event.target.value))
-    setEarningsTotal(calculateTotal(earnings))
-    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal)
-  }
+    setNewEarningAmount(Number(event.target.value));
+    setEarningsTotal(calculateTotal(earnings));
+    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
+  };
 
   const handleAddEarning = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const newEarning = {
       name: newEarningName,
       amount: newEarningAmount,
-    }
-    setEarnings([...earnings, newEarning])
-    setEarningsTotal(calculateTotal([...earnings, newEarning]))
-    setBudget(calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal)
-    setNewEarningName('')
-    setNewEarningAmount('')
-  }
+    };
+    setEarnings([...earnings, newEarning]);
+    setEarningsTotal(calculateTotal([...earnings, newEarning]));
+    setBudget(
+      calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal
+    );
+    setNewEarningName("");
+    setNewEarningAmount("");
+  };
 
   const handleDeleteEarning = (index, event) => {
-    event.preventDefault()
+    event.preventDefault();
     const filteredEarnings = earnings.filter((elem, i) => {
-      if (i !== index) return elem
-    })
-    setEarnings(filteredEarnings)
-    setEarningsTotal(calculateTotal(filteredEarnings))
-    setBudget(calculateTotal(filteredEarnings) - expensesTotal - savingsTotal)
-  }
+      if (i !== index) return elem;
+    });
+    setEarnings(filteredEarnings);
+    setEarningsTotal(calculateTotal(filteredEarnings));
+    setBudget(calculateTotal(filteredEarnings) - expensesTotal - savingsTotal);
+  };
 
   // EXPENSES FUNCTIONS
 
   const handleExpenseAmountChange = (index, event) => {
-    const newExpenses = [...expenses]
-    newExpenses[index].amount = Number(event.target.value)
-    setExpenses(newExpenses)
-    setExpensesTotal(calculateTotal(newExpenses))
-    setBudget(earningsTotal - calculateTotal(newExpenses) - savingsTotal)
-  }
+    const newExpenses = [...expenses];
+    newExpenses[index].amount = Number(event.target.value);
+    setExpenses(newExpenses);
+    setExpensesTotal(calculateTotal(newExpenses));
+    setBudget(earningsTotal - calculateTotal(newExpenses) - savingsTotal);
+  };
 
   const handleNewExpenseNameChange = (event) => {
-    setNewExpenseName(event.target.value)
-  }
+    setNewExpenseName(event.target.value);
+  };
 
   const handleNewExpenseAmountChange = (event) => {
-    setNewExpenseAmount(Number(event.target.value))
-    setExpensesTotal(calculateTotal(expenses))
-    setBudget(earningsTotal - calculateTotal(expenses) - savingsTotal)
-  }
+    setNewExpenseAmount(Number(event.target.value));
+    setExpensesTotal(calculateTotal(expenses));
+    setBudget(earningsTotal - calculateTotal(expenses) - savingsTotal);
+  };
 
   const handleAddExpense = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const newExpense = {
       name: newExpenseName,
       amount: newExpenseAmount,
-    }
-    setExpenses([...expenses, newExpense])
-    setExpensesTotal(calculateTotal([...expenses, newExpense]))
-    setBudget(earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal)
-    setNewExpenseName('')
-    setNewExpenseAmount('')
-  }
+    };
+    setExpenses([...expenses, newExpense]);
+    setExpensesTotal(calculateTotal([...expenses, newExpense]));
+    setBudget(
+      earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal
+    );
+    setNewExpenseName("");
+    setNewExpenseAmount("");
+  };
 
   const handleDeleteExpense = (index, event) => {
-    event.preventDefault()
+    event.preventDefault();
     const filteredExpenses = expenses.filter((elem, i) => {
-      if (i !== index) return elem
-    })
-    setExpenses(filteredExpenses)
-    setExpensesTotal(calculateTotal(filteredExpenses))
-    setBudget(earningsTotal - calculateTotal(filteredExpenses) - savingsTotal)
-  }
+      if (i !== index) return elem;
+    });
+    setExpenses(filteredExpenses);
+    setExpensesTotal(calculateTotal(filteredExpenses));
+    setBudget(earningsTotal - calculateTotal(filteredExpenses) - savingsTotal);
+  };
 
   // SAVINGS FUNCTIONS
   // const handleSavingAmountChange = (index, event) => {
@@ -183,26 +194,25 @@ function BudgetForm() {
   //   setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
   // }
 
-
   // SPENDING CATEGORIES FUNCTIONS
   const handleNewSpendingCategoryNameChange = (event) => {
-    setNewSpendingCategoryName(event.target.value)
-  }
+    setNewSpendingCategoryName(event.target.value);
+  };
 
   const handleAddSpendingCategory = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const newSpendingCategory = newSpendingCategoryName;
-    setSpendingCategories([...spendingCategories, newSpendingCategory])
-    setNewSpendingCategoryName('')
-  }
+    setSpendingCategories([...spendingCategories, newSpendingCategory]);
+    setNewSpendingCategoryName("");
+  };
 
   const handleDeleteSpendingCategory = (index, event) => {
-    event.preventDefault()
+    event.preventDefault();
     const filteredSpendingCategories = spendingCategories.filter((elem, i) => {
-      if (i !== index) return elem
-    })
-    setSpendingCategories(filteredSpendingCategories)
-  }
+      if (i !== index) return elem;
+    });
+    setSpendingCategories(filteredSpendingCategories);
+  };
 
   // BUDGET SUBMIT FUNCTIONS
 
@@ -211,17 +221,21 @@ function BudgetForm() {
     const gotToken = localStorage.getItem("authToken");
 
     try {
-      await axios.post("http://localhost:5005/budget/create", {
-        //user: userId,
-        currency: currency,
-        earnings: earnings,
-        expenses: expenses,
-        spendingCategories: spendingCategories,
-      }, { headers: { authorization: `Bearer ${gotToken}` } });
-      navigate("/profile");
+      await axios.post(
+        "http://localhost:5005/budget/create",
+        {
+          //user: userId,
+          currency: currency,
+          earnings: earnings,
+          expenses: expenses,
+          spendingCategories: spendingCategories,
+        },
+        { headers: { authorization: `Bearer ${gotToken}` } }
+      );
+      navigate("/auth/profile");
     } catch (err) {
       console.log("im in the catch block");
-      console.log("THIS IS THE ERR", err)
+      console.log("THIS IS THE ERR", err);
     }
   };
 
@@ -232,7 +246,9 @@ function BudgetForm() {
       <form onSubmit={handleSubmitBudget} className="form-budget">
         <fieldset>
           <legend>Your currency</legend>
-          <select name="currency" onChange={(event) => setCurrency(event.target.value)}>
+          <select
+            name="currency"
+            onChange={(event) => setCurrency(event.target.value)}>
             <option value="€">€</option>
             <option value="US$">US$</option>
             <option value="GBP">GBP</option>
@@ -246,9 +262,7 @@ function BudgetForm() {
               <div className="card-empty-text">
                 <img src={earningsGif} alt="" width="300" />
                 <h4>No earnings yet. 😿</h4>
-                <p>
-                  Start adding some via the form below.
-                </p>
+                <p>Start adding some via the form below.</p>
               </div>
             ) : null}
             {earnings.map((earning, index) => {
@@ -261,19 +275,34 @@ function BudgetForm() {
                     min="0"
                     value={earning.amount}
                     name={earning.name}
-                    onChange={(event) => handleEarningAmountChange(index, event)}
+                    onChange={(event) =>
+                      handleEarningAmountChange(index, event)
+                    }
                   />
                   <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(event) => handleDeleteEarning(index, event)}>
+                  <button
+                    className="btn-delete-item"
+                    onClick={(event) => handleDeleteEarning(index, event)}>
                     –
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
           <div className="grid">
-            <input type="text" value={newEarningName} onChange={handleNewEarningNameChange} placeholder="name" />
-            <input type="number" placeholder="0" min="0" value={newEarningAmount} onChange={handleNewEarningAmountChange} />
+            <input
+              type="text"
+              value={newEarningName}
+              onChange={handleNewEarningNameChange}
+              placeholder="name"
+            />
+            <input
+              type="number"
+              placeholder="0"
+              min="0"
+              value={newEarningAmount}
+              onChange={handleNewEarningAmountChange}
+            />
             <span className="currency">{`${currency}`}</span>
             <button className="btn-add-item" onClick={handleAddEarning}>
               +
@@ -288,9 +317,7 @@ function BudgetForm() {
               <div className="card-empty-text">
                 <img src={expensesGif} alt="" width="300" />
                 <h4>No expenses yet.</h4>
-                <p>
-                  Start adding some via the form below.
-                </p>
+                <p>Start adding some via the form below.</p>
               </div>
             ) : null}
             {expenses.map((expense, index) => {
@@ -305,23 +332,37 @@ function BudgetForm() {
                       min="0"
                       value={expense.amount}
                       name={expense.name}
-                      onChange={(event) => handleExpenseAmountChange(index, event)}
+                      onChange={(event) =>
+                        handleExpenseAmountChange(index, event)
+                      }
                     />
                   </div>
                   <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(event) => handleDeleteExpense(index, event)}>
+                  <button
+                    className="btn-delete-item"
+                    onClick={(event) => handleDeleteExpense(index, event)}>
                     –
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
           <div className="grid">
-            <input type="text" value={newExpenseName} onChange={handleNewExpenseNameChange} placeholder="name" />
+            <input
+              type="text"
+              value={newExpenseName}
+              onChange={handleNewExpenseNameChange}
+              placeholder="name"
+            />
             <div className="input-group">
               <span className="input-group-text">-</span>
-              <input type="number"
-                placeholder="0" min="0" value={newExpenseAmount} onChange={handleNewExpenseAmountChange} />
+              <input
+                type="number"
+                placeholder="0"
+                min="0"
+                value={newExpenseAmount}
+                onChange={handleNewExpenseAmountChange}
+              />
             </div>
             <span className="currency">{`${currency}`}</span>
             <button className="btn-add-item" onClick={handleAddExpense}>
@@ -380,7 +421,9 @@ function BudgetForm() {
 
         <fieldset>
           <legend>Your monthly budget:</legend>
-          <big>{budget} <span className="currency">{`${currency}`}</span></big>
+          <big>
+            {budget} <span className="currency">{`${currency}`}</span>
+          </big>
         </fieldset>
 
         <fieldset id="spendingCategories">
@@ -390,25 +433,34 @@ function BudgetForm() {
               <div className="card-empty-text">
                 <img src={spendingsGif} alt="" width="300" />
                 <h4>No spending categories yet.</h4>
-                <p>
-                  Start adding some via the form below.
-                </p>
+                <p>Start adding some via the form below.</p>
               </div>
             ) : null}
             {spendingCategories.map((spendingCategory, index) => {
               return (
                 <div key={index} className="grid">
                   <strong>{spendingCategory}</strong>
-                  <button className="btn-delete-item" onClick={(event) => handleDeleteSpendingCategory(index, event)}>
+                  <button
+                    className="btn-delete-item"
+                    onClick={(event) =>
+                      handleDeleteSpendingCategory(index, event)
+                    }>
                     –
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
           <div className="grid">
-            <input type="text" value={newSpendingCategoryName} onChange={handleNewSpendingCategoryNameChange} placeholder="name" />
-            <button className="btn-add-item" onClick={handleAddSpendingCategory}>
+            <input
+              type="text"
+              value={newSpendingCategoryName}
+              onChange={handleNewSpendingCategoryNameChange}
+              placeholder="name"
+            />
+            <button
+              className="btn-add-item"
+              onClick={handleAddSpendingCategory}>
               +
             </button>
           </div>
@@ -417,7 +469,7 @@ function BudgetForm() {
         <button>Start planning</button>
       </form>
     </>
-  )
+  );
 }
 
-export default BudgetForm
+export default BudgetForm;
