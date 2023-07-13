@@ -1,21 +1,28 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/auth.context";
 
 function SignupPage() {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const navigate = useNavigate();
+  const { setToken, authenticateUser, setIsLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const create = await axios.post("http://localhost:5005/auth/signup", {
+      const { data } = await axios.post("http://localhost:5005/auth/signup", {
         name: nameInput,
         email: emailInput,
         password: passwordInput,
       });
+
+      const actualToken = data.authToken;
+      setToken(actualToken);
+
+      setIsLoggedIn(true);
       setNameInput("");
       setEmailInput("");
       setPasswordInput("");
