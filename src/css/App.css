@@ -64,6 +64,10 @@ big {
   text-align: center;
 }
 
+h1 + big {
+  margin-top: -2rem;
+}
+
 /*----- BUTTONS -----*/
 
 .btn-add-item,
@@ -108,6 +112,10 @@ fieldset legend {
   margin-bottom: 1.5rem;
   padding: 1rem 0 0.5rem;
   width: 100%;
+}
+
+select {
+  height: calc(1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 + var(--border-width) * 2);
 }
 
 .input-group {
@@ -191,4 +199,6 @@ main.container {
   max-width: 800px;
   padding-top: 2rem;
   padding-bottom: 2rem;
+  padding-right: var(--spacing);
+  padding-left: var(--spacing);
 }
