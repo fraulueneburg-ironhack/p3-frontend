@@ -44,12 +44,24 @@ function DailyExpensesForm(props) {
 	const dateToday = new Date().toISOString()
 
 	const weekdayToday = 4
-	const firstDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - 6)))
-	const lastDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - 0)))
+	const firstDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - (((weekdayToday - 3) % 6) - 6))))
+	const lastDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - (((weekdayToday - 0) % 6) - 6))))
 
-	// today: 4 (last day)
+	// today: 4 (thu, day 6)
 	// first day: -6
 	// last day: -0
+
+	// today: 5 (fri, day 0)
+	// first day: 0
+	// last day: +6
+
+	// today: 6 (sat, day 1)   1%6
+	// first day: -1
+	// last day: +5
+
+	// today: 0 (sun, day 2)   2%6
+	// first day: -2
+	// last day: +5
 
 	// td  fd  ld
 	//  0  2   3
