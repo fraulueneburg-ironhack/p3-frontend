@@ -196,7 +196,7 @@ header button {
 
 main,
 main.container {
-  max-width: 800px;
+  max-width: 820px;
   padding-top: 2rem;
   padding-bottom: 2rem;
   padding-right: var(--spacing);
