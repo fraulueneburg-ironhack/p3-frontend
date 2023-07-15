@@ -235,6 +235,7 @@ function BudgetForm(props) {
 									<label>{earning.name}</label>
 									<input
 										type="number"
+										step=".01"
 										placeholder="0"
 										min="0"
 										value={earning.amount}
@@ -251,7 +252,14 @@ function BudgetForm(props) {
 					</div>
 					<div className="grid">
 						<input type="text" value={newEarningName} onChange={handleNewEarningNameChange} placeholder="name" />
-						<input type="number" placeholder="0" min="0" value={newEarningAmount} onChange={handleNewEarningAmountChange} />
+						<input
+							type="number"
+							step=".01"
+							placeholder="0"
+							min="0"
+							value={newEarningAmount}
+							onChange={handleNewEarningAmountChange}
+						/>
 						<span className="currency">{`${currency}`}</span>
 						<button className="btn-add-item" onClick={handleAddEarning}>
 							+
@@ -277,6 +285,7 @@ function BudgetForm(props) {
 										<span className="input-group-text">-</span>
 										<input
 											type="number"
+											step=".01"
 											placeholder="0"
 											min="0"
 											value={expense.amount}
@@ -298,6 +307,7 @@ function BudgetForm(props) {
 							<span className="input-group-text">-</span>
 							<input
 								type="number"
+								step=".01"
 								placeholder="0"
 								min="0"
 								value={newExpenseAmount}
