@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/auth.context";
 
 function ProfilePage() {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  const { setToken, setIsLoggedIn } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -35,6 +37,27 @@ function ProfilePage() {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const gotToken = localStorage.getItem("authToken");
+
+    try {
+      const deleteUser = await axios.delete(
+        "http://localhost:5005/auth/profile/delete",
+
+        {
+          headers: { authorization: `Bearer ${gotToken}` },
+        }
+      );
+      setToken(null);
+      setIsLoggedIn(false);
+      localStorage.removeItem("authToken");
+      navigate("/");
+    } catch (err) {
+      console.log("DELETE USER ERROR", err);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -61,6 +84,9 @@ function ProfilePage() {
           onChange={(e) => setPasswordInput(e.target.value)}
         />
         <input type="submit" value="Edit" />
+      </form>
+      <form onSubmit={handleDelete}>
+        <input type="submit" value="DELETE USER" />
       </form>
     </>
   );
