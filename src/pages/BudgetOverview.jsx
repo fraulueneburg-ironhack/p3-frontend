@@ -1,26 +1,68 @@
-import BudgetForm from "../components/BudgetForm";
-import DailyExpensesForm from "../components/DailyExpensesForm";
+import { useEffect, useState } from 'react'
+import BudgetForm from '../components/BudgetForm'
+import DailyExpensesForm from '../components/DailyExpensesForm'
+import axios from 'axios'
+import iconSettings from '../assets/icon-settings.svg'
+
+const gotToken = localStorage.getItem('authToken')
 
 function BudgetOverview() {
-  return (
-    <>
-      <h1>---------- IF NO BUDGET: ----------<br />
-        Your weekly budget:
-      </h1>
-      <p>You don’t have a weekly budget yet. Set up your account here:</p>
-      <BudgetForm />
+	const [existingBudget, setExistingBudget] = useState([])
+	const [existingBudgetLoaded, setExistingBudgetLoaded] = useState(false)
+	const [existingDailyExpenses, setExistingDailyExpenses] = useState([])
 
-      <br /><br /><br />
+	useEffect(() => {
+		const fetchBudgetData = async () => {
+			try {
+				const resp = await axios.get('http://localhost:5005/budget', {
+					headers: { authorization: `Bearer ${gotToken}` },
+					body: { token: gotToken },
+				})
+				console.log('RESP', resp)
+				setExistingDailyExpenses(resp.data.respDailyExpenses)
+				setExistingBudget(resp.data.respMonthlyBudget)
+				setExistingBudgetLoaded(true)
+			} catch (err) {
+				console.log('catch block error:', err)
+			}
+		}
+		fetchBudgetData()
+	}, [])
 
-      <h1>---------- IF BUDGET EXISTS: ----------<br />
-        Your weekly budget:
-      </h1>
-      <div className="card">
-        <big>0,00 €</big>
-      </div>
-      <DailyExpensesForm />
-    </>
-  );
+	if (existingBudgetLoaded && existingBudget.length > 0) {
+		return (
+			<>
+				<button style={{ width: '60px', padding: '10px', float: 'right' }}>
+					<img src={iconSettings} alt="settings" />
+				</button>
+				<DailyExpensesForm budgetData={existingBudget} dailyExpensesData={existingDailyExpenses} />
+			</>
+		)
+	} else if (!existingBudgetLoaded && existingBudget.length > 0) {
+		return (
+			<>
+				<h1>Edit your budget:</h1>
+				<p>
+					You don’t have a weekly budget yet. Start setting up your account by adding your monthly earnings, expenses and
+					spending categories here:
+				</p>
+				<BudgetForm budgetData={existingBudget} />
+			</>
+		)
+	} else if (existingBudgetLoaded && existingBudget.length === 0) {
+		return (
+			<>
+				<h1>Your budget:</h1>
+				<p>
+					You don’t have a weekly budget yet. Start setting up your account by adding your monthly earnings, expenses and
+					spending categories here:
+				</p>
+				<BudgetForm budgetData={existingBudget} />
+			</>
+		)
+	} else {
+		return <>••• loading •••</>
+	}
 }
 
-export default BudgetOverview;
+export default BudgetOverview

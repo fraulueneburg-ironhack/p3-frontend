@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import earningsGif from "../assets/gif-no-earnings.gif";
 import expensesGif from "../assets/gif-no-expenses.gif";
 import spendingsGif from "../assets/gif-no-spendings.gif";
+
 //import savingsGif from "../assets/gif-no-savings.gif"
 import axios from "axios";
 
-function BudgetForm() {
+function BudgetForm(props) {
   const navigate = useNavigate();
 
   // GENERAL FUNCTIONS
@@ -19,6 +20,7 @@ function BudgetForm() {
 
   // CURRENCY STATES
 
+  const allCurrencies = ["€", "$", "£", "¥"];
   const [currency, setCurrency] = useState("€");
 
   // EARNINGS STATES
@@ -52,14 +54,10 @@ function BudgetForm() {
   // SAVINGS STATES
 
   const savingsTotal = 0;
-  // const [savings, setSavings] = useState([{ name: 'My saving goal', amount: 0 }])
-  // const [savingsTotal, setSavingsTotal] = useState(calculateTotal(savings))
-  // const [newSavingName, setNewSavingName] = useState('')
-  // const [newSavingAmount, setNewSavingAmount] = useState('')
 
   // MONTHLY BUDGET STATE
 
-  const [budget, setBudget] = useState(
+  const [monthlyBudget, setMonthlyBudget] = useState(
     earningsTotal - expensesTotal - savingsTotal
   );
 
@@ -70,7 +68,7 @@ function BudgetForm() {
     newEarnings[index].amount = Number(event.target.value);
     setEarnings(newEarnings);
     setEarningsTotal(calculateTotal(earnings));
-    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
+    setMonthlyBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
   };
 
   const handleNewEarningNameChange = (event) => {
@@ -80,7 +78,7 @@ function BudgetForm() {
   const handleNewEarningAmountChange = (event) => {
     setNewEarningAmount(Number(event.target.value));
     setEarningsTotal(calculateTotal(earnings));
-    setBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
+    setMonthlyBudget(calculateTotal(earnings) - expensesTotal - savingsTotal);
   };
 
   const handleAddEarning = (event) => {
@@ -91,7 +89,7 @@ function BudgetForm() {
     };
     setEarnings([...earnings, newEarning]);
     setEarningsTotal(calculateTotal([...earnings, newEarning]));
-    setBudget(
+    setMonthlyBudget(
       calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal
     );
     setNewEarningName("");
@@ -105,7 +103,9 @@ function BudgetForm() {
     });
     setEarnings(filteredEarnings);
     setEarningsTotal(calculateTotal(filteredEarnings));
-    setBudget(calculateTotal(filteredEarnings) - expensesTotal - savingsTotal);
+    setMonthlyBudget(
+      calculateTotal(filteredEarnings) - expensesTotal - savingsTotal
+    );
   };
 
   // EXPENSES FUNCTIONS
@@ -115,7 +115,9 @@ function BudgetForm() {
     newExpenses[index].amount = Number(event.target.value);
     setExpenses(newExpenses);
     setExpensesTotal(calculateTotal(newExpenses));
-    setBudget(earningsTotal - calculateTotal(newExpenses) - savingsTotal);
+    setMonthlyBudget(
+      earningsTotal - calculateTotal(newExpenses) - savingsTotal
+    );
   };
 
   const handleNewExpenseNameChange = (event) => {
@@ -125,7 +127,7 @@ function BudgetForm() {
   const handleNewExpenseAmountChange = (event) => {
     setNewExpenseAmount(Number(event.target.value));
     setExpensesTotal(calculateTotal(expenses));
-    setBudget(earningsTotal - calculateTotal(expenses) - savingsTotal);
+    setMonthlyBudget(earningsTotal - calculateTotal(expenses) - savingsTotal);
   };
 
   const handleAddExpense = (event) => {
@@ -136,7 +138,7 @@ function BudgetForm() {
     };
     setExpenses([...expenses, newExpense]);
     setExpensesTotal(calculateTotal([...expenses, newExpense]));
-    setBudget(
+    setMonthlyBudget(
       earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal
     );
     setNewExpenseName("");
@@ -150,51 +152,13 @@ function BudgetForm() {
     });
     setExpenses(filteredExpenses);
     setExpensesTotal(calculateTotal(filteredExpenses));
-    setBudget(earningsTotal - calculateTotal(filteredExpenses) - savingsTotal);
+    setMonthlyBudget(
+      earningsTotal - calculateTotal(filteredExpenses) - savingsTotal
+    );
   };
 
-  // SAVINGS FUNCTIONS
-  // const handleSavingAmountChange = (index, event) => {
-  //   const newSavings = [...savings]
-  //   newSavings[index].amount = Number(event.target.value)
-  //   setSavings(newSavings)
-  //   setSavingsTotal(calculateTotal(newSavings))
-  //   setBudget(earningsTotal - expensesTotal - calculateTotal(newSavings))
-  // }
-  // const handleNewSavingNameChange = (event) => {
-  //   setNewSavingName(event.target.value)
-  // }
-
-  // const handleNewSavingAmountChange = (event) => {
-  //   setNewSavingAmount(Number(event.target.value))
-  //   setSavingsTotal(calculateTotal(savings))
-  //   setBudget(earningsTotal - expensesTotal - calculateTotal(savings))
-  // }
-
-  // const handleAddSaving = (event) => {
-  //   event.preventDefault()
-  //   const newSaving = {
-  //     name: newSavingName,
-  //     amount: newSavingAmount,
-  //   }
-  //   setSavings([...savings, newSaving])
-  //   setSavingsTotal(calculateTotal([...savings, newSaving]))
-  //   setBudget(earningsTotal - expensesTotal - calculateTotal([...savings, newSaving]))
-  //   setNewSavingName('')
-  //   setNewSavingAmount('')
-  // }
-
-  // const handleDeleteSaving = (index, event) => {
-  //   event.preventDefault()
-  //   const filteredSavings = savings.filter((elem, i) => {
-  //     if (i !== index) return elem
-  //   })
-  //   setSavings(filteredSavings)
-  //   setSavingsTotal(calculateTotal(filteredSavings))
-  //   setBudget(earningsTotal - expensesTotal - calculateTotal(filteredSavings))
-  // }
-
   // SPENDING CATEGORIES FUNCTIONS
+
   const handleNewSpendingCategoryNameChange = (event) => {
     setNewSpendingCategoryName(event.target.value);
   };
@@ -214,6 +178,25 @@ function BudgetForm() {
     setSpendingCategories(filteredSpendingCategories);
   };
 
+  // SET EXISTING BUDGET DATA
+
+  console.log("PROPS", props);
+
+  if (props.budgetData.length > 0) {
+    setCurrency(props.budgetData[0].currency);
+    setEarnings(props.budgetData[0].earnings);
+    setExpenses(props.budgetData[0].expenses);
+    setSpendingCategories(props.budgetData[0].spendingCategories);
+
+    setEarningsTotal(calculateTotal(props.budgetData[0].earnings));
+    setExpensesTotal(calculateTotal(props.budgetData[0].expenses));
+    setMonthlyBudget(
+      calculateTotal(props.budgetData[0].earnings) -
+        calculateTotal(props.budgetData[0].expenses) -
+        savingsTotal
+    );
+  }
+
   // BUDGET SUBMIT FUNCTIONS
 
   const handleSubmitBudget = async (event) => {
@@ -224,7 +207,6 @@ function BudgetForm() {
       await axios.post(
         "http://localhost:5005/budget/create",
         {
-          //user: userId,
           currency: currency,
           earnings: earnings,
           expenses: expenses,
@@ -232,7 +214,7 @@ function BudgetForm() {
         },
         { headers: { authorization: `Bearer ${gotToken}` } }
       );
-      navigate("/auth/profile");
+      navigate("/budget");
     } catch (err) {
       console.log("im in the catch block");
       console.log("THIS IS THE ERR", err);
@@ -248,15 +230,20 @@ function BudgetForm() {
           <legend>Your currency</legend>
           <select
             name="currency"
+            value={currency}
             onChange={(event) => setCurrency(event.target.value)}>
-            <option value="€">€</option>
-            <option value="US$">US$</option>
-            <option value="GBP">GBP</option>
+            {allCurrencies.map((elem, index) => {
+              return (
+                <option key={index} value={elem}>
+                  {elem}
+                </option>
+              );
+            })}
           </select>
         </fieldset>
 
         <fieldset id="earnings">
-          <legend>Your earnings</legend>
+          <legend>Your monthly earnings</legend>
           <div className="card">
             {earnings.length <= 0 ? (
               <div className="card-empty-text">
@@ -311,7 +298,7 @@ function BudgetForm() {
         </fieldset>
 
         <fieldset id="expenses">
-          <legend>Your expenses</legend>
+          <legend>Your monthly expenses</legend>
           <div className="card">
             {expenses.length <= 0 ? (
               <div className="card-empty-text">
@@ -371,58 +358,10 @@ function BudgetForm() {
           </div>
         </fieldset>
 
-        {/* <fieldset id="savings">
-          <legend>Your monthly saving goals</legend>
-          <div className="card">
-            {savings.length <= 0 ? (
-              <div className="card-empty-text">
-                <img src={savingsGif} alt="" width="300" />
-                <h4>No monthly saving goals yet.</h4>
-                <p>
-                  Start adding some via the form below.
-                </p>
-              </div>
-            ) : null}
-            {savings.map((saving, index) => {
-              return (
-                <div key={index} className="grid">
-                  <label>{saving.name}</label>
-                  <div className="input-group">
-                    <span className="input-group-text">-</span>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      min="0"
-                      value={saving.amount}
-                      name={saving.name}
-                      onChange={(event) => handleSavingAmountChange(index, event)}
-                    />
-                  </div>
-                  <span className="currency">{`${currency}`}</span>
-                  <button className="btn-delete-item" onClick={(event) => handleDeleteSaving(index, event)}>
-                    –
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-          <div className="grid">
-            <input type="text" value={newSavingName} onChange={handleNewSavingNameChange} placeholder="name" />
-            <div className="input-group">
-              <span className="input-group-text">-</span>
-              <input type="number" placeholder="0" min="0" value={newSavingAmount} onChange={handleNewSavingAmountChange} />
-            </div>
-            <span className="currency">{`${currency}`}</span>
-            <button className="btn-add-item" onClick={handleAddSaving}>
-              +
-            </button>
-          </div>
-        </fieldset> */}
-
         <fieldset>
           <legend>Your monthly budget:</legend>
           <big>
-            {budget} <span className="currency">{`${currency}`}</span>
+            {monthlyBudget} <span className="currency">{`${currency}`}</span>
           </big>
         </fieldset>
 
