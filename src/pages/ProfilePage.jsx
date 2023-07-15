@@ -1,15 +1,32 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 
 function ProfilePage() {
-  const [nameInput, setNameInput] = useState("");
+  const [nameInput, setNameInput] = useState();
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const { setToken, setIsLoggedIn, logOutUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const gotToken = localStorage.getItem("authToken");
+        const resp = await axios.get("http://localhost:5005/auth/profile", {
+          headers: { authorization: `Bearer ${gotToken}` },
+        });
+
+        setNameInput(resp.data.userNeeded.name);
+        setEmailInput(resp.data.userNeeded.email);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,10 +41,10 @@ function ProfilePage() {
         },
         { headers: { authorization: `Bearer ${gotToken}` } }
       );
-      setNameInput("");
-      setEmailInput("");
+      console.log(edit.data.updatedUser.email);
+      setNameInput(edit.data.updatedUser.name);
+      setEmailInput(edit.data.updatedUser.email);
       setPasswordInput("");
-      navigate("/budget");
     } catch (err) {
       console.log("im in the catch block");
       console.log("THIS IS THE ERR", err);
@@ -82,11 +99,12 @@ function ProfilePage() {
           placeholder="*********"
           onChange={(e) => setPasswordInput(e.target.value)}
         />
-        <input type="submit" value="Edit" />
+        <input type="submit" value="SAVE" />
       </form>
-      <form onSubmit={handleDelete}>
-        <input type="submit" value="DELETE USER" />
-      </form>
+
+      <button className="btn-delete-item" type="submit" onClick={handleDelete}>
+        DELETE
+      </button>
     </>
   );
 }
