@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
@@ -32,9 +32,14 @@ function DailyExpensesForm(props) {
 		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
 	)
 	console.log('monthlyBudget', monthlyBudget)
+
 	// DAILY EXPENSES
 
 	const [dailyExpensesArr, setDailyExpensesArr] = useState(propDailyExpensesData)
+	console.log(dailyExpensesArr)
+	console.log('DATE', dailyExpensesArr[0].date)
+	console.log('DATE TYPEOF', typeof dailyExpensesArr[0].date)
+
 	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
 	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
 
@@ -88,6 +93,14 @@ function DailyExpensesForm(props) {
 	// console.log('monthlyBudget', monthlyBudget)
 	// console.log('weeklyBudget', weeklyBudgetTotal)
 
+	// TIME PERIOD
+
+	const firstDayThisWeek = new Date(new Date().setDate(new Date().getDate()))
+	const lastDayThisWeek = new Date(new Date().setDate(new Date().getDate() - 7))
+
+	console.log('FIRST DAY', firstDayThisWeek.toISOString())
+	console.log('LAST DAY', lastDayThisWeek.toISOString())
+
 	// ADD EXPENSE
 
 	const handleAddDailyExpense = async (event) => {
@@ -109,7 +122,9 @@ function DailyExpensesForm(props) {
 			console.log('THIS IS THE ADD EXPENSE ERR', err)
 		}
 
-		setDailyExpensesArr([newDailyExpense, ...dailyExpensesArr])
+		setDailyExpensesArr(
+			[newDailyExpense, ...dailyExpensesArr].sort((a, b) => (a.date > b.date ? -1 : b.date > a.date ? 1 : 0))
+		)
 		setdailyExpensesTotal(calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 	}
@@ -192,33 +207,35 @@ function DailyExpensesForm(props) {
 							</tr>
 						</thead>
 						<tbody>
-							{dailyExpensesArr.map((dailyExpense, index) => {
-								return (
-									<tr key={dailyExpense._id}>
-										<td style={{ width: '130px' }}>
-											<time dateTime={dailyExpense.date}>
-												{weekdaysArr[new Date(Date.parse(dailyExpense.date)).getDay()]},&nbsp;
-												{dailyExpense.date.slice(8, 10)}
-											</time>
-										</td>
-										<td>
-											<strong>{dailyExpense.category}</strong>
-										</td>
-										<td>{dailyExpense.name}</td>
-										<td style={{ textAlign: 'right' }}>
-											-{dailyExpense.amount.toFixed(2)} {propBudgetData.currency}
-										</td>
-										<td>
-											<button
-												data-key={dailyExpense._id}
-												className="btn-delete-item"
-												onClick={(event) => handleDeleteDailyExpense(index, event)}>
-												–
-											</button>
-										</td>
-									</tr>
-								)
-							})}
+							{dailyExpensesArr
+								.map((dailyExpense, index) => {
+									return (
+										<tr key={dailyExpense._id}>
+											<td style={{ width: '130px' }}>
+												<time dateTime={dailyExpense.date}>
+													{weekdaysArr[new Date(Date.parse(dailyExpense.date)).getDay()]},&nbsp;
+													{dailyExpense.date.slice(8, 10)}
+												</time>
+											</td>
+											<td>
+												<strong>{dailyExpense.category}</strong>
+											</td>
+											<td>{dailyExpense.name}</td>
+											<td style={{ textAlign: 'right' }}>
+												-{dailyExpense.amount.toFixed(2)} {propBudgetData.currency}
+											</td>
+											<td>
+												<button
+													data-key={dailyExpense._id}
+													className="btn-delete-item"
+													onClick={(event) => handleDeleteDailyExpense(index, event)}>
+													–
+												</button>
+											</td>
+										</tr>
+									)
+								})
+								.sort((a, b) => (a.date > b.date ? 1 : b.date > a.date ? -1 : 0))}
 						</tbody>
 					</table>
 				)}
