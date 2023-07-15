@@ -29,6 +29,7 @@ function BudgetOverview() {
 			}
 		}
 		fetchBudgetData()
+		setDataLoaded(true)
 	}, [])
 
 	if (dataLoaded && existingBudget.length > 0) {
