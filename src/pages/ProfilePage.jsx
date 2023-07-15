@@ -7,7 +7,7 @@ function ProfilePage() {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  const { setToken, setIsLoggedIn } = useContext(AuthContext);
+  const { setToken, setIsLoggedIn, logOutUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -42,16 +42,15 @@ function ProfilePage() {
     const gotToken = localStorage.getItem("authToken");
 
     try {
-      const deleteUser = await axios.delete(
+      await axios.delete(
         "http://localhost:5005/auth/profile/delete",
 
         {
           headers: { authorization: `Bearer ${gotToken}` },
         }
       );
-      setToken(null);
-      setIsLoggedIn(false);
-      localStorage.removeItem("authToken");
+
+      logOutUser();
       navigate("/");
     } catch (err) {
       console.log("DELETE USER ERROR", err);
