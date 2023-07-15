@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
 
-const gotToken = localStorage.getItem('authToken')
-
 function DailyExpensesForm(props) {
 	const navigate = useNavigate()
 	const propBudgetData = props.budgetData[0]
 	const propDailyExpensesData = props.dailyExpensesData
+	const gotToken = localStorage.getItem('authToken')
+	const weekdaysArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 	// GENERAL FUNCTIONS
 
@@ -31,8 +31,15 @@ function DailyExpensesForm(props) {
 	const [monthlyBudget, setMonthlyBudget] = useState(
 		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
 	)
-	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31 / 7).toFixed(2))
-	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState((monthlyBudget / 31 / 7).toFixed(2))
+	console.log('monthlyBudget', monthlyBudget)
+	// DAILY EXPENSES
+
+	const [dailyExpensesArr, setDailyExpensesArr] = useState(propDailyExpensesData)
+	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
+	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
+
+	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
+	console.log('weeklyBudgetLeft', weeklyBudgetLeft)
 
 	const dateToday = new Date().toISOString()
 
@@ -41,8 +48,8 @@ function DailyExpensesForm(props) {
 	const lastDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - 0)))
 
 	// today: 4 (last day)
-	// first day: 5
-	// last day: 4
+	// first day: -6
+	// last day: -0
 
 	// td  fd  ld
 	//  0  2   3
@@ -65,12 +72,6 @@ function DailyExpensesForm(props) {
 	// console.log('monthlyBudget', monthlyBudget)
 	// console.log('weeklyBudget', weeklyBudgetTotal)
 
-	// DAILY EXPENSES
-
-	const [dailyExpensesArr, setDailyExpensesArr] = useState(propDailyExpensesData)
-	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
-	console.log('dailyExpensesTotal', dailyExpensesTotal)
-
 	// ADD EXPENSE
 
 	const handleAddDailyExpense = async (event) => {
@@ -80,25 +81,22 @@ function DailyExpensesForm(props) {
 			date: event.target.date.value,
 			category: event.target.category.value,
 			name: event.target.name.value,
-			amount: event.target.amount.value,
+			amount: +event.target.amount.value,
 		}
 
 		try {
-			const gotToken = localStorage.getItem('authToken')
 			await axios.post('http://localhost:5005/budget/addexpense', newDailyExpense, {
 				headers: { authorization: `Bearer ${gotToken}` },
 			})
 			navigate('/budget')
 		} catch (err) {
-			console.log('THIS IS THE ERR', err)
+			console.log('THIS IS THE ADD EXPENSE ERR', err)
 		}
 
 		setDailyExpensesArr([newDailyExpense, ...dailyExpensesArr])
 		setdailyExpensesTotal(calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 	}
-
-	console.log('dailyExpensesArr', dailyExpensesArr)
 
 	// DELETE EXPENSE
 
@@ -112,7 +110,6 @@ function DailyExpensesForm(props) {
 		const expenseId = event.target.getAttribute('data-key')
 
 		try {
-			const gotToken = localStorage.getItem('authToken')
 			await axios.delete(`http://localhost:5005/budget/deleteexpense/${expenseId}`, {
 				headers: { authorization: `Bearer ${gotToken}` },
 			})
@@ -120,6 +117,9 @@ function DailyExpensesForm(props) {
 		} catch (err) {
 			console.log('THIS IS THE ERR', err)
 		}
+
+		setdailyExpensesTotal(calculateTotal(filteredDailyExpensesArr))
+		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal(filteredDailyExpensesArr))
 	}
 
 	return (
@@ -127,14 +127,15 @@ function DailyExpensesForm(props) {
 			<div className="card">
 				<small>
 					<mark>current week</mark>
-					<br />
-					{firstDayOfWeek} – {lastDayOfWeek}
+					<div>
+						{firstDayOfWeek} – {lastDayOfWeek}
+					</div>
 				</small>
-				<h1>Your Budget this week:</h1>
+				<h1>Budget left this week:</h1>
 				<big>
-					{weeklyBudgetLeft} {propBudgetData.currency}
+					{weeklyBudgetLeft.toFixed(2)} {propBudgetData.currency}
 				</big>
-				of {weeklyBudgetTotal} {propBudgetData.currency}
+				of {weeklyBudgetTotal.toFixed(2)} {propBudgetData.currency}
 				<br />
 				<br />
 				<div className="grid">
@@ -142,17 +143,17 @@ function DailyExpensesForm(props) {
 					<button>» next week</button>
 				</div>
 			</div>
-			<h2>Add an expense from today:</h2>
+			<h2>Add an expense:</h2>
 			<form onSubmit={handleAddDailyExpense} className="form-daily-expenses">
 				<div className="grid">
 					<input type="date" name="date" required></input>
 					<select name="category">
-						<option>Food</option>
-						<option>Hobbies</option>
-						<option>Party</option>
+						{propBudgetData.spendingCategories.map((elem, index) => {
+							return <option key={elem + '-' + index}>{elem}</option>
+						})}
 					</select>
 					<input type="text" name="name" placeholder="name"></input>
-					<input type="number" name="amount" placeholder="0,00" required></input>
+					<input type="number" name="amount" placeholder="0,00" step=".01" required></input>
 					<button className="btn-add-item">+</button>
 				</div>
 			</form>
@@ -179,14 +180,17 @@ function DailyExpensesForm(props) {
 								return (
 									<tr key={dailyExpense._id}>
 										<td style={{ width: '130px' }}>
-											<time dateTime={dailyExpense.date}>{dailyExpense.date.slice(0, 10)}</time>
+											<time dateTime={dailyExpense.date}>
+												{weekdaysArr[new Date(Date.parse(dailyExpense.date)).getDay()]},&nbsp;
+												{dailyExpense.date.slice(8, 10)}
+											</time>
 										</td>
 										<td>
 											<strong>{dailyExpense.category}</strong>
 										</td>
 										<td>{dailyExpense.name}</td>
 										<td style={{ textAlign: 'right' }}>
-											-{dailyExpense.amount} {propBudgetData.currency}
+											-{dailyExpense.amount.toFixed(2)} {propBudgetData.currency}
 										</td>
 										<td>
 											<button
