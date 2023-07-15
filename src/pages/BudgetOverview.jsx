@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react'
-import BudgetForm from '../components/BudgetForm'
 import DailyExpensesForm from '../components/DailyExpensesForm'
 import axios from 'axios'
-import iconSettings from '../assets/icon-settings.svg'
+import { Link } from 'react-router-dom'
 
 function BudgetOverview() {
 	const [existingBudget, setExistingBudget] = useState([])
 	const [dataLoaded, setDataLoaded] = useState(false)
-	const [budgetEditMode, setBudgetEditMode] = useState(false)
 	const [existingDailyExpenses, setExistingDailyExpenses] = useState([])
-
-	const handleBudgetEditMode = () => {
-		setBudgetEditMode(true)
-	}
 
 	useEffect(() => {
 		const gotToken = localStorage.getItem('authToken')
@@ -35,21 +29,14 @@ function BudgetOverview() {
 	if (dataLoaded && existingBudget.length > 0) {
 		return (
 			<>
-				<button style={{ width: '60px', padding: '10px', float: 'right' }}>
-					<img src={iconSettings} alt="settings" />
-				</button>
 				<DailyExpensesForm budgetData={existingBudget} dailyExpensesData={existingDailyExpenses} />
 			</>
 		)
 	} else if (dataLoaded && existingBudget.length === 0) {
 		return (
 			<>
-				<h1>Your budget:</h1>
-				<p>
-					You don’t have a weekly budget yet. Start setting up your account by adding your monthly earnings, expenses and
-					spending categories here:
-				</p>
-				<BudgetForm budgetData={existingBudget} />
+				<h1>You don’t have a budget yet</h1>
+				<Link to="/budget/settings">Set up your budget now</Link>
 			</>
 		)
 	}

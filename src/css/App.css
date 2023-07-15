@@ -93,6 +93,7 @@ h1 + big {
 }
 
   
+.btn-delete,
 .btn-delete-item {
   background-color: var(--color-red);
   border-color: var(--color-red);
