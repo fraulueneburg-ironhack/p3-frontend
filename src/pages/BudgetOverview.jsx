@@ -4,14 +4,13 @@ import DailyExpensesForm from '../components/DailyExpensesForm'
 import axios from 'axios'
 import iconSettings from '../assets/icon-settings.svg'
 
-const gotToken = localStorage.getItem('authToken')
-
 function BudgetOverview() {
 	const [existingBudget, setExistingBudget] = useState([])
 	const [existingBudgetLoaded, setExistingBudgetLoaded] = useState(false)
 	const [existingDailyExpenses, setExistingDailyExpenses] = useState([])
 
 	useEffect(() => {
+		const gotToken = localStorage.getItem('authToken')
 		const fetchBudgetData = async () => {
 			try {
 				const resp = await axios.get('http://localhost:5005/budget', {
@@ -21,12 +20,12 @@ function BudgetOverview() {
 				console.log('RESP', resp)
 				setExistingDailyExpenses(resp.data.respDailyExpenses)
 				setExistingBudget(resp.data.respMonthlyBudget)
-				setExistingBudgetLoaded(true)
 			} catch (err) {
 				console.log('catch block error:', err)
 			}
 		}
 		fetchBudgetData()
+		setExistingBudgetLoaded(true)
 	}, [])
 
 	if (existingBudgetLoaded && existingBudget.length > 0) {
