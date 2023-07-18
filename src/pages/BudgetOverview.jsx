@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import DailyExpensesForm from '../components/DailyExpensesForm'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { API_URL } from "../config"
 
 function BudgetOverview() {
 	const [existingBudget, setExistingBudget] = useState([])
@@ -12,7 +13,7 @@ function BudgetOverview() {
 		const gotToken = localStorage.getItem('authToken')
 		const fetchBudgetData = async () => {
 			try {
-				const resp = await axios.get('http://localhost:5005/budget', {
+				const resp = await axios.get(`${API_URL}/budget`, {
 					headers: { authorization: `Bearer ${gotToken}` },
 				})
 				setExistingDailyExpenses(resp.data.respDailyExpenses)

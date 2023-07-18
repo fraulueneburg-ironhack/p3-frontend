@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import earningsGif from '../assets/gif-no-earnings.gif'
 import expensesGif from '../assets/gif-no-expenses.gif'
 import spendingsGif from '../assets/gif-no-spendings.gif'
+import { API_URL } from "../config"
 
 //import savingsGif from "../assets/gif-no-savings.gif"
 import axios from 'axios'
@@ -192,7 +193,7 @@ function BudgetForm(props) {
 
 		try {
 			await axios.post(
-				'http://localhost:5005/budget/create',
+				`${API_URL}/budget/create`,
 				{
 					currency: currency,
 					earnings: earnings,

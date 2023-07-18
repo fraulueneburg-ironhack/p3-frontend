@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
+import { API_URL } from "../config";
 
 function SignupPage() {
   const [nameInput, setNameInput] = useState("");
@@ -13,7 +14,7 @@ function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:5005/auth/signup", {
+      const { data } = await axios.post(`${API_URL}/auth/signup`, {
         name: nameInput,
         email: emailInput,
         password: passwordInput,

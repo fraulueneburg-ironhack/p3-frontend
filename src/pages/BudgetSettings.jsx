@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BudgetForm from '../components/BudgetForm'
 import axios from 'axios'
+import { API_URL } from "../config"
 
 function BudgetSettings() {
 	const [existingBudget, setExistingBudget] = useState([])
@@ -10,7 +11,7 @@ function BudgetSettings() {
 		const gotToken = localStorage.getItem('authToken')
 		const fetchBudgetData = async () => {
 			try {
-				const resp = await axios.get('http://localhost:5005/budget/settings', {
+				const resp = await axios.get(`${API_URL}/budget/settings`, {
 					headers: { authorization: `Bearer ${gotToken}` },
 				})
 				setExistingBudget(resp.data.respMonthlyBudget)

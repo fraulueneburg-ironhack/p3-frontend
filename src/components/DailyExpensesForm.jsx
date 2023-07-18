@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
+import { API_URL } from "../config"
 
 function DailyExpensesForm(props) {
 	const navigate = useNavigate()
@@ -73,7 +74,7 @@ function DailyExpensesForm(props) {
 		}
 
 		try {
-			await axios.post('http://localhost:5005/budget/addexpense', newDailyExpense, {
+			await axios.post(`${API_URL}/budget/addexpense`, newDailyExpense, {
 				headers: { authorization: `Bearer ${gotToken}` },
 			})
 			navigate('/budget')
@@ -100,7 +101,7 @@ function DailyExpensesForm(props) {
 		const expenseId = event.target.getAttribute('data-key')
 
 		try {
-			await axios.delete(`http://localhost:5005/budget/deleteexpense/${expenseId}`, {
+			await axios.delete(`${API_URL}/budget/deleteexpense/${expenseId}`, {
 				headers: { authorization: `Bearer ${gotToken}` },
 			})
 			navigate('/budget')

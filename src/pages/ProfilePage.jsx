@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth.context'
+import { API_URL } from "../config"
 
 function ProfilePage() {
 	const [nameInput, setNameInput] = useState()
@@ -15,7 +16,7 @@ function ProfilePage() {
 		const fetchUserData = async () => {
 			try {
 				const gotToken = localStorage.getItem('authToken')
-				const resp = await axios.get('http://localhost:5005/auth/profile', {
+				const resp = await axios.get(`${API_URL}/auth/profile`, {
 					headers: { authorization: `Bearer ${gotToken}` },
 				})
 
@@ -33,7 +34,7 @@ function ProfilePage() {
 		const gotToken = localStorage.getItem('authToken')
 		try {
 			const edit = await axios.post(
-				'http://localhost:5005/auth/profile',
+				`${API_URL}/auth/profile`,
 				{
 					name: nameInput,
 					email: emailInput,
@@ -60,7 +61,7 @@ function ProfilePage() {
 
 		try {
 			await axios.delete(
-				'http://localhost:5005/auth/profile/delete',
+				`${API_URL}/auth/profile/delete`,
 
 				{
 					headers: { authorization: `Bearer ${gotToken}` },

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth.context'
+import { API_URL } from "../config"
 
 function LoginForm() {
 	const [emailInput, setEmailInput] = useState('')
@@ -13,7 +14,7 @@ function LoginForm() {
 		e.preventDefault()
 
 		try {
-			const { data } = await axios.post('http://localhost:5005/auth/login', {
+			const { data } = await axios.post(`${API_URL}/auth/login`, {
 				email: emailInput,
 				password: passwordInput,
 			})
