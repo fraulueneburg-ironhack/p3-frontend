@@ -52,47 +52,6 @@ function DailyExpensesForm(props) {
 	const firstDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - 1)))
 	const lastDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() + 5)))
 
-	// 4 (thu, day 6)
-	// first day: -6
-	// last day: +-0
-
-	// 5 (fri, day 0)
-	// first day: 0
-	// last day: +6
-
-	// today: 6 (SATURDAY, day 1)
-	// first day: -1
-	// last day: +5
-
-	// 0 (sun, day 2)
-	// first day: -2
-	// last day: +4
-
-	// 1 (mon, day 3)
-	// first day: -3
-	// last day: +3
-
-	// td  fd  ld
-	//  0  2   3
-	//  1  3   4
-	//  2  4   5
-	//  3  5   6
-	//  4  6   0
-	//  5  0   1
-	//  6  1   2
-
-	// 0-6
-	// friday = 5
-	// thursday = 4
-
-	// console.log('Date to string', new Date().toLocaleDateString('en-US'))
-	// console.log('currentDate', dateToday)
-	// console.log('weekdayToday', weekdayToday)
-	// console.log('firstDayOfWeek', firstDayOfWeek)
-	// console.log('lastDayOfWeek', lastDayOfWeek)
-	// console.log('monthlyBudget', monthlyBudget)
-	// console.log('weeklyBudget', weeklyBudgetTotal)
-
 	// TIME PERIOD
 
 	const firstDayThisWeek = new Date(new Date().setDate(new Date().getDate()))
