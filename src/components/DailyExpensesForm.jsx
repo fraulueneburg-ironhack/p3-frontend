@@ -37,9 +37,7 @@ function DailyExpensesForm(props) {
 	// DAILY EXPENSES
 
 	const [dailyExpensesArr, setDailyExpensesArr] = useState(propDailyExpensesData)
-	console.log(dailyExpensesArr)
-	console.log('DATE', dailyExpensesArr[0].date)
-	console.log('DATE TYPEOF', typeof dailyExpensesArr[0].date)
+	console.log('dailyExpensesArr', dailyExpensesArr)
 
 	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
 	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
