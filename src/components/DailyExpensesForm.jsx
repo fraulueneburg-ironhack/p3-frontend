@@ -19,8 +19,8 @@ function DailyExpensesForm(props) {
 		}, 0)
 	}
 
-	const writeOutDay = (day) => {
-		return day.toLocaleDateString('en-US', {
+	const writeOutDate = (ISOdate) => {
+		return new Date(ISOdate).toLocaleDateString('en-US', {
 			weekday: 'short',
 			month: 'short',
 			day: 'numeric',
@@ -36,26 +36,58 @@ function DailyExpensesForm(props) {
 
 	// TIME PERIOD
 
-	const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(new Date().setDate(new Date().getDate() - 7)))
+	const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(new Date().setDate(new Date().getDate() - 6)))
 	const [lastDayOfWeek, setLastDayofWeek] = useState(new Date(new Date().setDate(new Date().getDate())))
+	const [firstDayOfWeekISO, setFirstDayOfWeekISO] = useState(firstDayOfWeek.toISOString().slice(0, 10))
+	const [lastDayOfWeekISO, setLastDayofWeekISO] = useState(lastDayOfWeek.toISOString().slice(0, 10))
 
 	// DAILY EXPENSES FOR CURRENT WEEK
 
 	const [dailyExpensesArr, setDailyExpensesArr] = useState(
 		propDailyExpensesData.filter(
-			(element) =>
-				element.date.slice(0, 10) >= firstDayOfWeek.toISOString().slice(0, 10) &&
-				element.date.slice(0, 10) <= lastDayOfWeek.toISOString().slice(0, 10)
+			(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
 		)
 	)
+
+	const [numOfWeeksToNavigate, setNumOfWeeksToNavigate] = useState(0)
+
+	useEffect(() => {
+		// Convert ISO format strings to JavaScript Date objects
+		const currentFirstDay = new Date(firstDayOfWeek)
+		const currentLastDay = new Date(lastDayOfWeek)
+
+		const oneWeek = 7 * 24 * 60 * 60 * 1000 // One week in milliseconds
+
+		// Calculate the new firstDayOfTheWeek and lastDayOfTheWeek based on the current state
+		const newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneWeek)
+		const newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneWeek)
+
+		// Convert back to ISO format strings
+		const newFirstDayISO = newFirstDay.toISOString().slice(0, 10)
+		const newLastDayISO = newLastDay.toISOString().slice(0, 10)
+
+		console.log('newFirstDayISO', newFirstDayISO)
+		console.log('newLastDayISO', newLastDayISO)
+
+		// Update the state with the new ISO format strings
+		setFirstDayOfWeekISO(newFirstDayISO)
+		setLastDayofWeekISO(newLastDayISO)
+
+		setDailyExpensesArr(
+			propDailyExpensesData.filter(
+				(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
+			)
+		)
+	}, [numOfWeeksToNavigate, firstDayOfWeek, lastDayOfWeek, firstDayOfWeekISO, lastDayOfWeekISO])
+
+	useEffect(() => {
+		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
+		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal(dailyExpensesArr))
+	}, [dailyExpensesArr])
 
 	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
 	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
 	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
-
-	console.log('FIRST DAY THIS WEEK', firstDayOfWeek.toISOString().slice(0, 10))
-	console.log('LAST DAY THIS WEEK', lastDayOfWeek.toISOString().slice(0, 10))
-	console.log('dailyExpensesArr', dailyExpensesArr)
 
 	// ADD EXPENSE
 
@@ -115,7 +147,7 @@ function DailyExpensesForm(props) {
 				<small>
 					<mark>current week</mark>
 					<div>
-						{writeOutDay(firstDayOfWeek)} – {writeOutDay(lastDayOfWeek)}
+						{writeOutDate(firstDayOfWeekISO)} – {writeOutDate(lastDayOfWeekISO)}
 					</div>
 				</small>
 				<h1>Budget left this week:</h1>
@@ -126,14 +158,14 @@ function DailyExpensesForm(props) {
 				<br />
 				<br />
 				<div className="grid">
-					<button>« prev week</button>
-					<button>» next week</button>
+					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev - 1)}>« prev week</button>
+					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev + 1)}>» next week</button>
 				</div>
 			</div>
 			<h2>Add an expense:</h2>
 			<form onSubmit={handleAddDailyExpense} className="form-daily-expenses">
 				<div className="grid">
-					<input type="date" name="date" required></input>
+					<input type="date" name="date" min={firstDayOfWeekISO} max={lastDayOfWeekISO} required></input>
 					<select name="category">
 						{propBudgetData.spendingCategories.map((elem, index) => {
 							return <option key={elem + '-' + index}>{elem}</option>
@@ -168,10 +200,7 @@ function DailyExpensesForm(props) {
 									return (
 										<tr key={dailyExpense._id}>
 											<td style={{ width: '130px' }}>
-												<time dateTime={dailyExpense.date}>
-													{weekdaysArr[new Date(Date.parse(dailyExpense.date)).getDay()]},&nbsp;
-													{dailyExpense.date.slice(8, 10)}
-												</time>
+												<time dateTime={dailyExpense.date}>{writeOutDate(dailyExpense.date)}</time>
 											</td>
 											<td>
 												<strong>{dailyExpense.category}</strong>
