@@ -9,7 +9,6 @@ function DailyExpensesForm(props) {
 	const propBudgetData = props.budgetData[0]
 	const propDailyExpensesData = props.dailyExpensesData
 	const gotToken = localStorage.getItem('authToken')
-	const weekdaysArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 	// GENERAL FUNCTIONS
 
@@ -36,10 +35,32 @@ function DailyExpensesForm(props) {
 
 	// TIME PERIOD
 
-	const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(new Date().setDate(new Date().getDate() - 6)))
-	const [lastDayOfWeek, setLastDayofWeek] = useState(new Date(new Date().setDate(new Date().getDate())))
+	let dayToday = new Date().getDay()
+	// dayToday = 2
+	console.log('DAY TODAY', dayToday)
+
+	const [firstDayOfWeek, setFirstDayOfWeek] = useState(
+		new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7)))
+	)
+	const [lastDayOfWeek, setLastDayofWeek] = useState(
+		new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6)))
+	)
 	const [firstDayOfWeekISO, setFirstDayOfWeekISO] = useState(firstDayOfWeek.toISOString().slice(0, 10))
 	const [lastDayOfWeekISO, setLastDayofWeekISO] = useState(lastDayOfWeek.toISOString().slice(0, 10))
+
+	// today     first    last
+	// 0 (sun)   -2       +4         0%6 = 0
+	// 1 (mon)   -3       +3         1%6 = 1
+	// 2 (tue)   -4       +2         2%6 = 2
+	// 3 (wed)   -5       +1         3%6 = 3
+	// 4 (thu)   -6       +0         4%6 = 4
+	// 5 (fri)   -0       +6         5%6 = 5
+	// 6 (sat)   -1       +5         6%6 = 0
+	// 0 (sun)   -2       +4         0%6 = 0
+	// 1 (mon)   -3       +3         1%6 = 2
+	// 2 (tue)   -4       +2         2%6 = 3
+	// 3 (wed)   -5       +1
+	// 4 (thu)   -6       +0         (-dayToday-2)%7
 
 	// DAILY EXPENSES FOR CURRENT WEEK
 
@@ -48,6 +69,10 @@ function DailyExpensesForm(props) {
 			(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
 		)
 	)
+
+	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
+	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
+	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
 
 	const [numOfWeeksToNavigate, setNumOfWeeksToNavigate] = useState(0)
 
@@ -66,9 +91,6 @@ function DailyExpensesForm(props) {
 		const newFirstDayISO = newFirstDay.toISOString().slice(0, 10)
 		const newLastDayISO = newLastDay.toISOString().slice(0, 10)
 
-		console.log('newFirstDayISO', newFirstDayISO)
-		console.log('newLastDayISO', newLastDayISO)
-
 		// Update the state with the new ISO format strings
 		setFirstDayOfWeekISO(newFirstDayISO)
 		setLastDayofWeekISO(newLastDayISO)
@@ -78,16 +100,12 @@ function DailyExpensesForm(props) {
 				(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
 			)
 		)
-	}, [numOfWeeksToNavigate, firstDayOfWeek, lastDayOfWeek, firstDayOfWeekISO, lastDayOfWeekISO])
+	}, [numOfWeeksToNavigate, firstDayOfWeek, lastDayOfWeek, firstDayOfWeekISO, lastDayOfWeekISO, propDailyExpensesData])
 
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
 		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal(dailyExpensesArr))
-	}, [dailyExpensesArr])
-
-	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
-	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
-	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
+	}, [dailyExpensesArr, weeklyBudgetTotal])
 
 	// ADD EXPENSE
 
