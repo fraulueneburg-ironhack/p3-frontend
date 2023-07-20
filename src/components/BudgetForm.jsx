@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import earningsGif from '../assets/gif-no-earnings.gif'
 import expensesGif from '../assets/gif-no-expenses.gif'
 import spendingsGif from '../assets/gif-no-spendings.gif'
-import { API_URL } from "../config"
+import { API_URL } from '../config'
 
 //import savingsGif from "../assets/gif-no-savings.gif"
 import axios from 'axios'
@@ -15,9 +15,10 @@ function BudgetForm(props) {
 	// GENERAL FUNCTIONS
 
 	const calculateTotal = (arr) => {
-		return arr.reduce((acc, curr) => {
+		let sum = arr.reduce((acc, curr) => {
 			return acc + curr.amount
 		}, 0)
+		return sum.toFixed(2)
 	}
 
 	// CURRENCY STATES
@@ -54,7 +55,7 @@ function BudgetForm(props) {
 
 	// MONTHLY BUDGET STATE
 
-	const [monthlyBudget, setMonthlyBudget] = useState(earningsTotal - expensesTotal - savingsTotal)
+	const [monthlyBudget, setMonthlyBudget] = useState((earningsTotal - expensesTotal - savingsTotal).toFixed(2))
 
 	// EARNINGS FUNCTIONS
 
@@ -63,7 +64,7 @@ function BudgetForm(props) {
 		newEarnings[index].amount = Number(event.target.value)
 		setEarnings(newEarnings)
 		setEarningsTotal(calculateTotal(earnings))
-		setMonthlyBudget(calculateTotal(earnings) - expensesTotal - savingsTotal)
+		setMonthlyBudget((calculateTotal(earnings) - expensesTotal - savingsTotal).toFixed(2))
 	}
 
 	const handleNewEarningNameChange = (event) => {
@@ -73,7 +74,7 @@ function BudgetForm(props) {
 	const handleNewEarningAmountChange = (event) => {
 		setNewEarningAmount(Number(event.target.value))
 		setEarningsTotal(calculateTotal(earnings))
-		setMonthlyBudget(calculateTotal(earnings) - expensesTotal - savingsTotal)
+		setMonthlyBudget((calculateTotal(earnings) - expensesTotal - savingsTotal).toFixed(2))
 	}
 
 	const handleAddEarning = (event) => {
@@ -84,7 +85,7 @@ function BudgetForm(props) {
 		}
 		setEarnings([...earnings, newEarning])
 		setEarningsTotal(calculateTotal([...earnings, newEarning]))
-		setMonthlyBudget(calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal)
+		setMonthlyBudget((calculateTotal([...earnings, newEarning]) - expensesTotal - savingsTotal).toFixed(2))
 		setNewEarningName('')
 		setNewEarningAmount('')
 	}
@@ -96,7 +97,7 @@ function BudgetForm(props) {
 		})
 		setEarnings(filteredEarnings)
 		setEarningsTotal(calculateTotal(filteredEarnings))
-		setMonthlyBudget(calculateTotal(filteredEarnings) - expensesTotal - savingsTotal)
+		setMonthlyBudget((calculateTotal(filteredEarnings) - expensesTotal - savingsTotal).toFixed(2))
 	}
 
 	// EXPENSES FUNCTIONS
@@ -106,7 +107,7 @@ function BudgetForm(props) {
 		newExpenses[index].amount = Number(event.target.value)
 		setExpenses(newExpenses)
 		setExpensesTotal(calculateTotal(newExpenses))
-		setMonthlyBudget(earningsTotal - calculateTotal(newExpenses) - savingsTotal)
+		setMonthlyBudget((earningsTotal - calculateTotal(newExpenses) - savingsTotal).toFixed(2))
 	}
 
 	const handleNewExpenseNameChange = (event) => {
@@ -116,7 +117,7 @@ function BudgetForm(props) {
 	const handleNewExpenseAmountChange = (event) => {
 		setNewExpenseAmount(Number(event.target.value))
 		setExpensesTotal(calculateTotal(expenses))
-		setMonthlyBudget(earningsTotal - calculateTotal(expenses) - savingsTotal)
+		setMonthlyBudget((earningsTotal - calculateTotal(expenses) - savingsTotal).toFixed(2))
 	}
 
 	const handleAddExpense = (event) => {
@@ -127,7 +128,7 @@ function BudgetForm(props) {
 		}
 		setExpenses([...expenses, newExpense])
 		setExpensesTotal(calculateTotal([...expenses, newExpense]))
-		setMonthlyBudget(earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal)
+		setMonthlyBudget((earningsTotal - calculateTotal([...expenses, newExpense]) - savingsTotal).toFixed(2))
 		setNewExpenseName('')
 		setNewExpenseAmount('')
 	}
@@ -139,7 +140,7 @@ function BudgetForm(props) {
 		})
 		setExpenses(filteredExpenses)
 		setExpensesTotal(calculateTotal(filteredExpenses))
-		setMonthlyBudget(earningsTotal - calculateTotal(filteredExpenses) - savingsTotal)
+		setMonthlyBudget((earningsTotal - calculateTotal(filteredExpenses) - savingsTotal).toFixed(2))
 	}
 
 	// SPENDING CATEGORIES FUNCTIONS
@@ -176,7 +177,11 @@ function BudgetForm(props) {
 				setEarningsTotal(calculateTotal(props.budgetData[0].earnings))
 				setExpensesTotal(calculateTotal(props.budgetData[0].expenses))
 				setMonthlyBudget(
-					calculateTotal(props.budgetData[0].earnings) - calculateTotal(props.budgetData[0].expenses) - savingsTotal
+					(
+						calculateTotal(props.budgetData[0].earnings) -
+						calculateTotal(props.budgetData[0].expenses) -
+						savingsTotal
+					).toFixed(2)
 				)
 			}
 		}
@@ -244,8 +249,9 @@ function BudgetForm(props) {
 										<label>{earning.name}</label>
 										<input
 											type="number"
-											placeholder="0"
 											min="0"
+											placeholder="0,00"
+											step=".01"
 											value={earning.amount}
 											name={earning.name}
 											onChange={(event) => handleEarningAmountChange(index, event)}
@@ -262,7 +268,8 @@ function BudgetForm(props) {
 							<input type="text" value={newEarningName} onChange={handleNewEarningNameChange} placeholder="name" />
 							<input
 								type="number"
-								placeholder="0"
+								placeholder="0,00"
+								step=".01"
 								min="0"
 								value={newEarningAmount}
 								onChange={handleNewEarningAmountChange}
@@ -292,7 +299,8 @@ function BudgetForm(props) {
 											<span className="input-group-text">-</span>
 											<input
 												type="number"
-												placeholder="0"
+												placeholder="0,00"
+												step=".01"
 												min="0"
 												value={expense.amount}
 												name={expense.name}
@@ -313,7 +321,8 @@ function BudgetForm(props) {
 								<span className="input-group-text">-</span>
 								<input
 									type="number"
-									placeholder="0"
+									placeholder="0,00"
+									step=".01"
 									min="0"
 									value={newExpenseAmount}
 									onChange={handleNewExpenseAmountChange}

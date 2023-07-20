@@ -36,7 +36,6 @@ function DailyExpensesForm(props) {
 	// TIME PERIOD
 
 	let dayToday = new Date().getDay()
-	// dayToday = 2
 	console.log('DAY TODAY', dayToday)
 
 	const [firstDayOfWeek, setFirstDayOfWeek] = useState(
@@ -45,6 +44,7 @@ function DailyExpensesForm(props) {
 	const [lastDayOfWeek, setLastDayofWeek] = useState(
 		new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6)))
 	)
+
 	const [firstDayOfWeekISO, setFirstDayOfWeekISO] = useState(firstDayOfWeek.toISOString().slice(0, 10))
 	const [lastDayOfWeekISO, setLastDayofWeekISO] = useState(lastDayOfWeek.toISOString().slice(0, 10))
 
