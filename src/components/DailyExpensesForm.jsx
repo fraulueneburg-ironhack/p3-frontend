@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
-import { API_URL } from "../config"
+import { API_URL } from '../config'
 
 function DailyExpensesForm(props) {
 	const navigate = useNavigate()
@@ -34,30 +34,28 @@ function DailyExpensesForm(props) {
 	)
 	console.log('monthlyBudget', monthlyBudget)
 
-	// DAILY EXPENSES
+	// TIME PERIOD
 
-	const [dailyExpensesArr, setDailyExpensesArr] = useState(propDailyExpensesData)
-	console.log('dailyExpensesArr', dailyExpensesArr)
+	const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(new Date().setDate(new Date().getDate() - 7)))
+	const [lastDayOfWeek, setLastDayofWeek] = useState(new Date(new Date().setDate(new Date().getDate())))
+
+	// DAILY EXPENSES FOR CURRENT WEEK
+
+	const [dailyExpensesArr, setDailyExpensesArr] = useState(
+		propDailyExpensesData.filter(
+			(element) =>
+				element.date.slice(0, 10) >= firstDayOfWeek.toISOString().slice(0, 10) &&
+				element.date.slice(0, 10) <= lastDayOfWeek.toISOString().slice(0, 10)
+		)
+	)
 
 	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
 	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
-
 	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
-	console.log('weeklyBudgetLeft', weeklyBudgetLeft)
 
-	const dateToday = new Date().toISOString()
-
-	const weekdayToday = 6
-	const firstDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() - 1)))
-	const lastDayOfWeek = writeOutDay(new Date(new Date().setDate(new Date().getDate() + 5)))
-
-	// TIME PERIOD
-
-	const firstDayThisWeek = new Date(new Date().setDate(new Date().getDate()))
-	const lastDayThisWeek = new Date(new Date().setDate(new Date().getDate() - 7))
-
-	console.log('FIRST DAY', firstDayThisWeek.toISOString())
-	console.log('LAST DAY', lastDayThisWeek.toISOString())
+	console.log('FIRST DAY THIS WEEK', firstDayOfWeek.toISOString().slice(0, 10))
+	console.log('LAST DAY THIS WEEK', lastDayOfWeek.toISOString().slice(0, 10))
+	console.log('dailyExpensesArr', dailyExpensesArr)
 
 	// ADD EXPENSE
 
@@ -117,7 +115,7 @@ function DailyExpensesForm(props) {
 				<small>
 					<mark>current week</mark>
 					<div>
-						{firstDayOfWeek} – {lastDayOfWeek}
+						{writeOutDay(firstDayOfWeek)} – {writeOutDay(lastDayOfWeek)}
 					</div>
 				</small>
 				<h1>Budget left this week:</h1>
