@@ -41,14 +41,6 @@ function DailyExpensesForm(props) {
 	const monthToday = new Date().getMonth()
 	const yearToday = new Date().getFullYear()
 
-	function getDaysInMonth(year, month) {
-		// To find the number of days in a month, set the date to the next month's 0th day (i.e., last day of the current month)
-		const lastDayOfMonth = new Date(year, month + 1, 0)
-		return lastDayOfMonth.getDate()
-	}
-
-	console.log(getDaysInMonth(2023, 7))
-
 	const [isCurrentTime, setIsCurrentTime] = useState(true)
 
 	const [firstDay, setFirstDay] = useState(new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7))))
@@ -106,14 +98,13 @@ function DailyExpensesForm(props) {
 			)
 		)
 
-		if (
+		// is the week/month the current one?
+		setIsCurrentTime(
 			(timePeriod === 'month' && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
-			(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
-		) {
-			setIsCurrentTime(true)
-		} else {
-			setIsCurrentTime(false)
-		}
+				(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
+				? true
+				: false
+		)
 	}, [
 		firstDay,
 		lastDay,
