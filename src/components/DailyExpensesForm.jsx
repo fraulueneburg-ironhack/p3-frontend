@@ -196,7 +196,9 @@ function DailyExpensesForm(props) {
 				<br />
 				<div className="grid">
 					<button onClick={() => setNumOfItemsToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
-					<button onClick={() => setNumOfItemsToNavigate((prev) => prev + 1)}>» next {timePeriod}</button>
+					<button disabled={isCurrentTime} onClick={() => setNumOfItemsToNavigate((prev) => prev + 1)}>
+						» next {timePeriod}
+					</button>
 				</div>
 			</div>
 			<h2>Add an expense:</h2>

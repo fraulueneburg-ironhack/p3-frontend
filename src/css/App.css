@@ -63,6 +63,7 @@ form .card>.grid:last-child button {
 
 .card-budget-month {
   --primary: #5e35b1;
+  --primary-hover: #3b2171;
 }
 
 
