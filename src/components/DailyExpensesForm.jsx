@@ -27,26 +27,33 @@ function DailyExpensesForm(props) {
 	}
 
 	// VARIABLES
+	// WEEKLY/MONTHLY BUDGET
+
+	const [timePeriod, setTimePeriod] = useState("week")
 
 	const [monthlyBudget, setMonthlyBudget] = useState(
 		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
 	)
+	const [monthlyBudgetLeft, setMonthlyBudgetLeft] = useState(
+		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
+	)
 	console.log('monthlyBudget', monthlyBudget)
+
 
 	// TIME PERIOD
 
 	let dayToday = new Date().getDay()
 	console.log('DAY TODAY', dayToday)
 
-	const [firstDayOfWeek, setFirstDayOfWeek] = useState(
+	const [firstDay, setFirstDay] = useState(
 		new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7)))
 	)
-	const [lastDayOfWeek, setLastDayofWeek] = useState(
+	const [lastDay, setLastDay] = useState(
 		new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6)))
 	)
 
-	const [firstDayOfWeekISO, setFirstDayOfWeekISO] = useState(firstDayOfWeek.toISOString().slice(0, 10))
-	const [lastDayOfWeekISO, setLastDayofWeekISO] = useState(lastDayOfWeek.toISOString().slice(0, 10))
+	const [firstDayISO, setFirstDayISO] = useState(firstDay.toISOString().slice(0, 10))
+	const [lastDayISO, setLastDayISO] = useState(lastDay.toISOString().slice(0, 10))
 
 	// today     first    last
 	// 0 (sun)   -2       +4         0%6 = 0
@@ -66,7 +73,7 @@ function DailyExpensesForm(props) {
 
 	const [dailyExpensesArr, setDailyExpensesArr] = useState(
 		propDailyExpensesData.filter(
-			(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
+			(element) => element.date.slice(0, 10) >= firstDayISO && element.date.slice(0, 10) <= lastDayISO
 		)
 	)
 
@@ -78,29 +85,36 @@ function DailyExpensesForm(props) {
 
 	useEffect(() => {
 		// Convert ISO format strings to JavaScript Date objects
-		const currentFirstDay = new Date(firstDayOfWeek)
-		const currentLastDay = new Date(lastDayOfWeek)
+		const currentFirstDay = new Date(firstDay)
+		const currentLastDay = new Date(lastDay)
+		
 
 		const oneWeek = 7 * 24 * 60 * 60 * 1000 // One week in milliseconds
+		const oneMonth = 30 * 24 * 60 * 60 * 1000 // One week in milliseconds
 
 		// Calculate the new firstDayOfTheWeek and lastDayOfTheWeek based on the current state
-		const newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneWeek)
-		const newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneWeek)
+		let newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneWeek)
+		let newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneWeek)
+		
+		if (timePeriod === "month") {
+			newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneMonth)
+			newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneMonth)
+		}
 
 		// Convert back to ISO format strings
 		const newFirstDayISO = newFirstDay.toISOString().slice(0, 10)
 		const newLastDayISO = newLastDay.toISOString().slice(0, 10)
 
 		// Update the state with the new ISO format strings
-		setFirstDayOfWeekISO(newFirstDayISO)
-		setLastDayofWeekISO(newLastDayISO)
+		setFirstDayISO(newFirstDayISO)
+		setLastDayISO(newLastDayISO)
 
 		setDailyExpensesArr(
 			propDailyExpensesData.filter(
-				(element) => element.date.slice(0, 10) >= firstDayOfWeekISO && element.date.slice(0, 10) <= lastDayOfWeekISO
+				(element) => element.date.slice(0, 10) >= firstDayISO && element.date.slice(0, 10) <= lastDayISO
 			)
 		)
-	}, [numOfWeeksToNavigate, firstDayOfWeek, lastDayOfWeek, firstDayOfWeekISO, lastDayOfWeekISO, propDailyExpensesData])
+	}, [numOfWeeksToNavigate, firstDay, lastDay, firstDayISO, lastDayISO, propDailyExpensesData, timePeriod])
 
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
@@ -161,14 +175,18 @@ function DailyExpensesForm(props) {
 
 	return (
 		<>
+			<div className="grid">
+				<button onClick={() => setTimePeriod("week")}>weekly</button>
+				<button onClick={() => setTimePeriod("month")}>monthly</button>
+			</div>
 			<div className="card">
 				<small>
-					<mark>current week</mark>
+					<mark>current {timePeriod}</mark>
 					<div>
-						{writeOutDate(firstDayOfWeekISO)} – {writeOutDate(lastDayOfWeekISO)}
+						{writeOutDate(firstDayISO)} – {writeOutDate(lastDayISO)}
 					</div>
 				</small>
-				<h1>Budget left this week:</h1>
+				<h1>Budget left this {timePeriod}:</h1>
 				<big>
 					{weeklyBudgetLeft.toFixed(2)} {propBudgetData.currency}
 				</big>
@@ -176,14 +194,14 @@ function DailyExpensesForm(props) {
 				<br />
 				<br />
 				<div className="grid">
-					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev - 1)}>« prev week</button>
-					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev + 1)}>» next week</button>
+					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
+					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev + 1)}>» next {timePeriod}</button>
 				</div>
 			</div>
 			<h2>Add an expense:</h2>
 			<form onSubmit={handleAddDailyExpense} className="form-daily-expenses">
 				<div className="grid">
-					<input type="date" name="date" min={firstDayOfWeekISO} max={lastDayOfWeekISO} required></input>
+					<input type="date" name="date" min={firstDayISO} max={lastDayISO} required></input>
 					<select name="category">
 						{propBudgetData.spendingCategories.map((elem, index) => {
 							return <option key={elem + '-' + index}>{elem}</option>
