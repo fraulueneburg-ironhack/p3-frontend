@@ -29,48 +29,25 @@ function DailyExpensesForm(props) {
 	// VARIABLES
 	// WEEKLY/MONTHLY BUDGET
 
-	const [timePeriod, setTimePeriod] = useState("week")
+	const [timePeriod, setTimePeriod] = useState('week')
 
 	const [monthlyBudget, setMonthlyBudget] = useState(
 		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
 	)
-	const [monthlyBudgetLeft, setMonthlyBudgetLeft] = useState(
-		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
-	)
-
 
 	// TIME PERIOD
 
-	let dayToday = new Date().getDay()
-	let monthToday = new Date().getMonth()
-	let yearToday = new Date().getFullYear()
-	console.log('DAY TODAY', dayToday)
-	console.log('MONTH TODAY', monthToday)
-	console.log('YEAR TODAY', yearToday)
+	const dayToday = new Date().getDay()
+	const monthToday = new Date().getMonth()
+	const yearToday = new Date().getFullYear()
 
-	const [firstDay, setFirstDay] = useState(
-		new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7)))
-	)
-	const [lastDay, setLastDay] = useState(
-		new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6)))
-	)
+	const [isCurrentTime, setIsCurrentTime] = useState(true)
+
+	const [firstDay, setFirstDay] = useState(new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7))))
+	const [lastDay, setLastDay] = useState(new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6))))
 
 	const [firstDayISO, setFirstDayISO] = useState(firstDay.toISOString().slice(0, 10))
 	const [lastDayISO, setLastDayISO] = useState(lastDay.toISOString().slice(0, 10))
-
-	// today     first    last
-	// 0 (sun)   -2       +4         0%6 = 0
-	// 1 (mon)   -3       +3         1%6 = 1
-	// 2 (tue)   -4       +2         2%6 = 2
-	// 3 (wed)   -5       +1         3%6 = 3
-	// 4 (thu)   -6       +0         4%6 = 4
-	// 5 (fri)   -0       +6         5%6 = 5
-	// 6 (sat)   -1       +5         6%6 = 0
-	// 0 (sun)   -2       +4         0%6 = 0
-	// 1 (mon)   -3       +3         1%6 = 2
-	// 2 (tue)   -4       +2         2%6 = 3
-	// 3 (wed)   -5       +1
-	// 4 (thu)   -6       +0         (-dayToday-2)%7
 
 	// DAILY EXPENSES FOR CURRENT WEEK
 
@@ -84,11 +61,11 @@ function DailyExpensesForm(props) {
 	const [budgetTotal, setBudgetTotal] = useState((monthlyBudget / 31) * 7)
 	const [budgetLeft, setBudgetLeft] = useState(budgetTotal - dailyExpensesTotal)
 
-	const [numOfWeeksToNavigate, setNumOfWeeksToNavigate] = useState(0)
+	const [numOfItemsToNavigate, setNumOfItemsToNavigate] = useState(0)
 
 	useEffect(() => {
-		timePeriod === "week" ? setBudgetTotal((monthlyBudget / 31) * 7) : setBudgetTotal(monthlyBudget)
-	},[timePeriod, monthlyBudget])
+		timePeriod === 'week' ? setBudgetTotal((monthlyBudget / 31) * 7) : setBudgetTotal(monthlyBudget)
+	}, [timePeriod, monthlyBudget])
 
 	useEffect(() => {
 		// Convert ISO format strings to JavaScript Date objects
@@ -97,16 +74,23 @@ function DailyExpensesForm(props) {
 		const oneWeek = 7 * 24 * 60 * 60 * 1000 // One week in milliseconds
 
 		// Calculate the new firstDayOfTheWeek and lastDayOfTheWeek based on the current state
-		let newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneWeek)
-		let newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneWeek)
-		
-		if (timePeriod === "month") {
-			currentFirstDay = new Date(yearToday, monthToday, 1)
+		let newFirstDay = new Date(currentFirstDay.getTime() + numOfItemsToNavigate * oneWeek)
+		let newLastDay = new Date(currentLastDay.getTime() + numOfItemsToNavigate * oneWeek)
+
+		if (timePeriod === 'month') {
+			const newDate = new Date()
+			const timezoneOffsetHours = Math.floor(Math.abs(newDate.getTimezoneOffset()) / 60)
+			currentFirstDay = new Date(yearToday, monthToday, 1, timezoneOffsetHours)
 			currentLastDay = new Date(yearToday, monthToday + 1, 0)
 
-			newFirstDay = new Date(currentFirstDay.setMonth(currentFirstDay.getMonth() + numOfWeeksToNavigate))
-			newLastDay = new Date(currentLastDay.setMonth(currentLastDay.getMonth() + numOfWeeksToNavigate))
+			console.log('CURRENTLASTDAY', currentLastDay)
+
+			newFirstDay = new Date(currentFirstDay.setMonth(currentFirstDay.getMonth() + numOfItemsToNavigate))
+			newLastDay = new Date(currentLastDay.setMonth(currentLastDay.getMonth() + numOfItemsToNavigate))
 		}
+
+		// console.log('newFirstDay', newFirstDay)
+		console.log('newLastDay', newLastDay)
 
 		// Convert back to ISO format strings
 		// Update the state with the new ISO format strings
@@ -116,12 +100,34 @@ function DailyExpensesForm(props) {
 		setFirstDayISO(newFirstDayISO)
 		setLastDayISO(newLastDayISO)
 
+		// console.log('newFirstDayISO', newFirstDayISO)
+		console.log('newLastDayISO', newLastDayISO)
+
 		setDailyExpensesArr(
 			propDailyExpensesData.filter(
 				(element) => element.date.slice(0, 10) >= firstDayISO && element.date.slice(0, 10) <= lastDayISO
 			)
 		)
-	}, [firstDay, lastDay, firstDayISO, lastDayISO, numOfWeeksToNavigate, timePeriod, monthToday, yearToday, propDailyExpensesData])
+
+		if (
+			(timePeriod === 'month' && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
+			(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
+		) {
+			setIsCurrentTime(true)
+		} else {
+			setIsCurrentTime(false)
+		}
+	}, [
+		firstDay,
+		lastDay,
+		firstDayISO,
+		lastDayISO,
+		numOfItemsToNavigate,
+		timePeriod,
+		monthToday,
+		yearToday,
+		propDailyExpensesData,
+	])
 
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
@@ -182,13 +188,13 @@ function DailyExpensesForm(props) {
 
 	return (
 		<>
-			<div className="grid">
-				<button onClick={() => setTimePeriod("week")}>weekly</button>
-				<button onClick={() => setTimePeriod("month")}>monthly</button>
-			</div>
-			<div className="card">
+			<div className={`card card-budget card-budget-${timePeriod}`}>
+				<div className="nav-tabs">
+					<button onClick={() => setTimePeriod('week')}>weekly</button>
+					<button onClick={() => setTimePeriod('month')}>monthly</button>
+				</div>
 				<small>
-					<mark>current {timePeriod}</mark>
+					{isCurrentTime ? <mark>current {timePeriod}</mark> : null}
 					<div>
 						{writeOutDate(firstDayISO)} – {writeOutDate(lastDayISO)}
 					</div>
@@ -200,10 +206,9 @@ function DailyExpensesForm(props) {
 				of {budgetTotal.toFixed(2)} {propBudgetData.currency}
 				<br />
 				<br />
-				
 				<div className="grid">
-					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
-					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev + 1)}>» next {timePeriod}</button>
+					<button onClick={() => setNumOfItemsToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
+					<button onClick={() => setNumOfItemsToNavigate((prev) => prev + 1)}>» next {timePeriod}</button>
 				</div>
 			</div>
 			<h2>Add an expense:</h2>
@@ -271,8 +276,10 @@ function DailyExpensesForm(props) {
 								<td></td>
 								<td></td>
 								<td></td>
-								<td style={{textAlign: 'right'}}>
-									<strong>-{(budgetTotal - budgetLeft).toFixed(2)}  {propBudgetData.currency}</strong>
+								<td style={{ textAlign: 'right' }}>
+									<strong>
+										-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
+									</strong>
 								</td>
 							</tr>
 						</tfoot>
