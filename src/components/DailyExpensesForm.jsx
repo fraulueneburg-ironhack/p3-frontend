@@ -215,6 +215,20 @@ function DailyExpensesForm(props) {
 
 	return (
 		<>
+			<div className="chart-container">
+				<h2 style={{ textAlign: 'center' }}>Pie Chart</h2>
+				<Pie
+					data={chartData}
+					options={{
+						plugins: {
+							title: {
+								display: true,
+								text: 'Expenses Chart',
+							},
+						},
+					}}
+				/>
+			</div>
 			<div className={`card card-budget ${timePeriod}-active`}>
 				<div className="nav-tabs">
 					<button onClick={() => setTimePeriod('week')} className={`btn-week ${timePeriod === 'week' ? 'active' : ''}`}>
