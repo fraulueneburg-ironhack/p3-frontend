@@ -19,11 +19,22 @@ function DailyExpensesForm(props) {
 	}
 
 	const writeOutDate = (ISOdate) => {
-		return new Date(ISOdate).toLocaleDateString('en-US', {
-			weekday: 'short',
-			month: 'short',
-			day: 'numeric',
-		})
+		let writtenDate
+		if (+ISOdate.slice(0, 4) === yearToday) {
+			writtenDate = new Date(ISOdate).toLocaleDateString('en-US', {
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric',
+			})
+		} else {
+			writtenDate = new Date(ISOdate).toLocaleDateString('en-US', {
+				year: 'numeric',
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric',
+			})
+		}
+		return writtenDate
 	}
 
 	// VARIABLES
