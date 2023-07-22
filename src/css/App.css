@@ -55,6 +55,17 @@ form .card>.grid:last-child button {
   margin-bottom: 0;
 }
 
+/*----- CARD: BUDGET -----*/
+
+.card-budget {
+  position: relative;
+}
+
+.card-budget-month {
+  --primary: #5e35b1;
+}
+
+
 /*----- TYPOGRAPHY -----*/
 
 big {
