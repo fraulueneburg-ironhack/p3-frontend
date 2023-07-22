@@ -37,13 +37,16 @@ function DailyExpensesForm(props) {
 	const [monthlyBudgetLeft, setMonthlyBudgetLeft] = useState(
 		calculateTotal(propBudgetData.earnings) - calculateTotal(propBudgetData.expenses)
 	)
-	console.log('monthlyBudget', monthlyBudget)
 
 
 	// TIME PERIOD
 
 	let dayToday = new Date().getDay()
+	let monthToday = new Date().getMonth()
+	let yearToday = new Date().getFullYear()
 	console.log('DAY TODAY', dayToday)
+	console.log('MONTH TODAY', monthToday)
+	console.log('YEAR TODAY', yearToday)
 
 	const [firstDay, setFirstDay] = useState(
 		new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7)))
@@ -78,34 +81,38 @@ function DailyExpensesForm(props) {
 	)
 
 	const [dailyExpensesTotal, setdailyExpensesTotal] = useState(calculateTotal(dailyExpensesArr))
-	const [weeklyBudgetTotal, setWeeklyBudgetTotal] = useState((monthlyBudget / 31) * 7)
-	const [weeklyBudgetLeft, setWeeklyBudgetLeft] = useState(weeklyBudgetTotal - dailyExpensesTotal)
+	const [budgetTotal, setBudgetTotal] = useState((monthlyBudget / 31) * 7)
+	const [budgetLeft, setBudgetLeft] = useState(budgetTotal - dailyExpensesTotal)
 
 	const [numOfWeeksToNavigate, setNumOfWeeksToNavigate] = useState(0)
 
 	useEffect(() => {
-		// Convert ISO format strings to JavaScript Date objects
-		const currentFirstDay = new Date(firstDay)
-		const currentLastDay = new Date(lastDay)
-		
+		timePeriod === "week" ? setBudgetTotal((monthlyBudget / 31) * 7) : setBudgetTotal(monthlyBudget)
+	},[timePeriod, monthlyBudget])
 
+	useEffect(() => {
+		// Convert ISO format strings to JavaScript Date objects
+		let currentFirstDay = new Date(firstDay)
+		let currentLastDay = new Date(lastDay)
 		const oneWeek = 7 * 24 * 60 * 60 * 1000 // One week in milliseconds
-		const oneMonth = 30 * 24 * 60 * 60 * 1000 // One week in milliseconds
 
 		// Calculate the new firstDayOfTheWeek and lastDayOfTheWeek based on the current state
 		let newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneWeek)
 		let newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneWeek)
 		
 		if (timePeriod === "month") {
-			newFirstDay = new Date(currentFirstDay.getTime() + numOfWeeksToNavigate * oneMonth)
-			newLastDay = new Date(currentLastDay.getTime() + numOfWeeksToNavigate * oneMonth)
+			currentFirstDay = new Date(yearToday, monthToday, 1)
+			currentLastDay = new Date(yearToday, monthToday + 1, 0)
+
+			newFirstDay = new Date(currentFirstDay.setMonth(currentFirstDay.getMonth() + numOfWeeksToNavigate))
+			newLastDay = new Date(currentLastDay.setMonth(currentLastDay.getMonth() + numOfWeeksToNavigate))
 		}
 
 		// Convert back to ISO format strings
+		// Update the state with the new ISO format strings
 		const newFirstDayISO = newFirstDay.toISOString().slice(0, 10)
 		const newLastDayISO = newLastDay.toISOString().slice(0, 10)
 
-		// Update the state with the new ISO format strings
 		setFirstDayISO(newFirstDayISO)
 		setLastDayISO(newLastDayISO)
 
@@ -114,12 +121,12 @@ function DailyExpensesForm(props) {
 				(element) => element.date.slice(0, 10) >= firstDayISO && element.date.slice(0, 10) <= lastDayISO
 			)
 		)
-	}, [numOfWeeksToNavigate, firstDay, lastDay, firstDayISO, lastDayISO, propDailyExpensesData, timePeriod])
+	}, [firstDay, lastDay, firstDayISO, lastDayISO, numOfWeeksToNavigate, timePeriod, monthToday, yearToday, propDailyExpensesData])
 
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
-		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal(dailyExpensesArr))
-	}, [dailyExpensesArr, weeklyBudgetTotal])
+		setBudgetLeft(budgetTotal - calculateTotal(dailyExpensesArr))
+	}, [dailyExpensesArr, budgetTotal])
 
 	// ADD EXPENSE
 
@@ -146,7 +153,7 @@ function DailyExpensesForm(props) {
 			[newDailyExpense, ...dailyExpensesArr].sort((a, b) => (a.date > b.date ? -1 : b.date > a.date ? 1 : 0))
 		)
 		setdailyExpensesTotal(calculateTotal([newDailyExpense, ...dailyExpensesArr]))
-		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
+		setBudgetLeft(budgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 	}
 
 	// DELETE EXPENSE
@@ -170,7 +177,7 @@ function DailyExpensesForm(props) {
 		}
 
 		setdailyExpensesTotal(calculateTotal(filteredDailyExpensesArr))
-		setWeeklyBudgetLeft(weeklyBudgetTotal - calculateTotal(filteredDailyExpensesArr))
+		setBudgetLeft(budgetTotal - calculateTotal(filteredDailyExpensesArr))
 	}
 
 	return (
@@ -188,11 +195,12 @@ function DailyExpensesForm(props) {
 				</small>
 				<h1>Budget left this {timePeriod}:</h1>
 				<big>
-					{weeklyBudgetLeft.toFixed(2)} {propBudgetData.currency}
+					{budgetLeft.toFixed(2)} {propBudgetData.currency}
 				</big>
-				of {weeklyBudgetTotal.toFixed(2)} {propBudgetData.currency}
+				of {budgetTotal.toFixed(2)} {propBudgetData.currency}
 				<br />
 				<br />
+				
 				<div className="grid">
 					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
 					<button onClick={() => setNumOfWeeksToNavigate((prev) => prev + 1)}>» next {timePeriod}</button>
@@ -258,6 +266,16 @@ function DailyExpensesForm(props) {
 								})
 								.sort((a, b) => (a.date > b.date ? 1 : b.date > a.date ? -1 : 0))}
 						</tbody>
+						<tfoot>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td style={{textAlign: 'right'}}>
+									<strong>-{(budgetTotal - budgetLeft).toFixed(2)}  {propBudgetData.currency}</strong>
+								</td>
+							</tr>
+						</tfoot>
 					</table>
 				)}
 			</div>

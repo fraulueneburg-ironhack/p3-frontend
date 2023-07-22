@@ -44,14 +44,14 @@ form .card {
   margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
 }
 
-form .card + .grid {
+form .card+.grid {
   padding-left: var(--block-spacing-horizontal);
   padding-right: var(--block-spacing-horizontal);
 }
 
-form .card > .grid:last-child label,
-form .card > .grid:last-child input,
-form .card > .grid:last-child button {
+form .card>.grid:last-child label,
+form .card>.grid:last-child input,
+form .card>.grid:last-child button {
   margin-bottom: 0;
 }
 
@@ -64,9 +64,17 @@ big {
   text-align: center;
 }
 
-h1 + big {
+h1+big {
   margin-top: -2rem;
 }
+
+
+/*----- TABLE -----*/
+
+tfoot td {
+  white-space: nowrap;
+}
+
 
 /*----- BUTTONS -----*/
 
@@ -92,7 +100,7 @@ h1 + big {
   background-color: var(--color-red-hover);
 }
 
-  
+
 .btn-delete,
 .btn-delete-item {
   background-color: var(--color-red);
@@ -134,7 +142,7 @@ select {
   padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
 }
 
-.input-group-text + input {
+.input-group-text+input {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
