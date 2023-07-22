@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
 import { API_URL } from '../config'
+import Chart from 'chart.js/auto'
+import { CategoryScale } from 'chart.js'
+import { Pie } from 'react-chartjs-2'
 
 function DailyExpensesForm(props) {
 	const navigate = useNavigate()
 	const propBudgetData = props.budgetData[0]
 	const propDailyExpensesData = props.dailyExpensesData
 	const gotToken = localStorage.getItem('authToken')
+	console.log(propBudgetData)
 
 	// GENERAL FUNCTIONS
 
@@ -72,6 +76,30 @@ function DailyExpensesForm(props) {
 	const [budgetTotal, setBudgetTotal] = useState((monthlyBudget / 31) * 7)
 	const [budgetLeft, setBudgetLeft] = useState(budgetTotal - dailyExpensesTotal)
 
+	//PIE chart stuff
+
+	Chart.register(CategoryScale)
+	const [chartData, setChartData] = useState({
+		labels: dailyExpensesArr.map((each) => each.category),
+		datasets: [
+			{
+				label: 'Expenses ',
+				data: dailyExpensesArr.map((each) => each.amount),
+				backgroundColor: ['rgba(75,192,192,1)', '#ecf0f1', '#50AF95', '#f3ba2f', '#2a71d0'],
+				borderColor: 'black',
+				borderWidth: 2,
+			},
+			/* {
+        label: "Monthly Budget",
+        data: [monthlyBudget],
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 2,
+      }, */
+		],
+	})
+
+	console.log('dailyExpensesArray ', dailyExpensesArr)
 	const [numOfItemsToNavigate, setNumOfItemsToNavigate] = useState(0)
 
 	useEffect(() => {
@@ -80,7 +108,6 @@ function DailyExpensesForm(props) {
 	}, [timePeriod, monthlyBudget])
 
 	useEffect(() => {
-		console.log('INITIAL numOfItemsToNavigate', numOfItemsToNavigate)
 		// Convert ISO format strings to JavaScript Date objects
 		let currentFirstDay = new Date(firstDay)
 		let currentLastDay = new Date(lastDay)
@@ -96,8 +123,6 @@ function DailyExpensesForm(props) {
 			newFirstDay = new Date(yearToday, monthToday + numOfItemsToNavigate, 1, timezoneOffsetHours)
 			newLastDay = new Date(yearToday, monthToday + numOfItemsToNavigate + 1, 0, timezoneOffsetHours)
 		}
-
-		console.log('AFTER numOfItemsToNavigate', numOfItemsToNavigate)
 
 		// Convert back to ISO format strings
 		// Update the state with the new ISO format strings
