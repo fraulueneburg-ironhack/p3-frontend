@@ -41,6 +41,14 @@ function DailyExpensesForm(props) {
 	const monthToday = new Date().getMonth()
 	const yearToday = new Date().getFullYear()
 
+	function getDaysInMonth(year, month) {
+		// To find the number of days in a month, set the date to the next month's 0th day (i.e., last day of the current month)
+		const lastDayOfMonth = new Date(year, month + 1, 0)
+		return lastDayOfMonth.getDate()
+	}
+
+	console.log(getDaysInMonth(2023, 7))
+
 	const [isCurrentTime, setIsCurrentTime] = useState(true)
 
 	const [firstDay, setFirstDay] = useState(new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7))))
@@ -80,17 +88,9 @@ function DailyExpensesForm(props) {
 		if (timePeriod === 'month') {
 			const newDate = new Date()
 			const timezoneOffsetHours = Math.floor(Math.abs(newDate.getTimezoneOffset()) / 60)
-			currentFirstDay = new Date(yearToday, monthToday, 1, timezoneOffsetHours)
-			currentLastDay = new Date(yearToday, monthToday + 1, 0)
-
-			console.log('CURRENTLASTDAY', currentLastDay)
-
-			newFirstDay = new Date(currentFirstDay.setMonth(currentFirstDay.getMonth() + numOfItemsToNavigate))
-			newLastDay = new Date(currentLastDay.setMonth(currentLastDay.getMonth() + numOfItemsToNavigate))
+			newFirstDay = new Date(yearToday, monthToday + numOfItemsToNavigate, 1, timezoneOffsetHours)
+			newLastDay = new Date(yearToday, monthToday + numOfItemsToNavigate + 1, 0, timezoneOffsetHours)
 		}
-
-		// console.log('newFirstDay', newFirstDay)
-		console.log('newLastDay', newLastDay)
 
 		// Convert back to ISO format strings
 		// Update the state with the new ISO format strings
@@ -99,9 +99,6 @@ function DailyExpensesForm(props) {
 
 		setFirstDayISO(newFirstDayISO)
 		setLastDayISO(newLastDayISO)
-
-		// console.log('newFirstDayISO', newFirstDayISO)
-		console.log('newLastDayISO', newLastDayISO)
 
 		setDailyExpensesArr(
 			propDailyExpensesData.filter(
