@@ -187,7 +187,6 @@ function BudgetForm(props) {
 		}
 		setInitialBudgetData()
 		setDataLoaded(true)
-		console.log('PROPS', props)
 	}, [props])
 
 	// BUDGET SUBMIT FUNCTIONS
@@ -247,16 +246,18 @@ function BudgetForm(props) {
 								return (
 									<div key={index} className="grid">
 										<label>{earning.name}</label>
-										<input
-											type="number"
-											min="0"
-											placeholder="0,00"
-											step=".01"
-											value={earning.amount}
-											name={earning.name}
-											onChange={(event) => handleEarningAmountChange(index, event)}
-										/>
-										<span className="currency">{`${currency}`}</span>
+										<div className="input-group">
+											<input
+												type="number"
+												min="0"
+												placeholder="0,00"
+												step=".01"
+												value={earning.amount}
+												name={earning.name}
+												onChange={(event) => handleEarningAmountChange(index, event)}
+											/>
+											<span className="text">{`${currency}`}</span>
+										</div>
 										<button className="btn-delete-item" onClick={(event) => handleDeleteEarning(index, event)}>
 											–
 										</button>
@@ -266,15 +267,17 @@ function BudgetForm(props) {
 						</div>
 						<div className="grid">
 							<input type="text" value={newEarningName} onChange={handleNewEarningNameChange} placeholder="name" />
-							<input
-								type="number"
-								placeholder="0,00"
-								step=".01"
-								min="0"
-								value={newEarningAmount}
-								onChange={handleNewEarningAmountChange}
-							/>
-							<span className="currency">{`${currency}`}</span>
+							<div className="input-group">
+								<input
+									type="number"
+									placeholder="0,00"
+									step=".01"
+									min="0"
+									value={newEarningAmount}
+									onChange={handleNewEarningAmountChange}
+								/>
+								<span className="text">{`${currency}`}</span>
+							</div>
 							<button className="btn-add-item" onClick={handleAddEarning}>
 								+
 							</button>
@@ -306,8 +309,8 @@ function BudgetForm(props) {
 												name={expense.name}
 												onChange={(event) => handleExpenseAmountChange(index, event)}
 											/>
+											<span className="text">{`${currency}`}</span>
 										</div>
-										<span className="currency">{`${currency}`}</span>
 										<button className="btn-delete-item" onClick={(event) => handleDeleteExpense(index, event)}>
 											–
 										</button>
@@ -327,8 +330,8 @@ function BudgetForm(props) {
 									value={newExpenseAmount}
 									onChange={handleNewExpenseAmountChange}
 								/>
+								<span className="text">{`${currency}`}</span>
 							</div>
-							<span className="currency">{`${currency}`}</span>
 							<button className="btn-add-item" onClick={handleAddExpense}>
 								+
 							</button>

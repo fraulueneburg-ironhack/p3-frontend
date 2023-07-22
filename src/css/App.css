@@ -7,6 +7,15 @@
   --color-red-hover: #ef5350;
   --color-green: #43a047;
   --color-green-hover: #66bb6a;
+  --animation-zoom-in: zoom-in 0.4s ease 0s 1 normal forwards;
+}
+
+/* subtle animations */
+
+@keyframes zoom-in {
+  0%    { transform: scale(1); }
+  50%   { transform: scale(1.15) }
+  100%  { transform: scale(1); }
 }
 
 /*----- GENERAL -----*/
@@ -16,56 +25,25 @@ body {
   padding-bottom: 3rem;
 }
 
-.card {
-  background: var(--card-background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-box-shadow);
-  margin: var(--block-spacing-vertical) 0;
-  padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+header {
+  display: flex;
+  padding: 1rem 0;
+  justify-content: space-between;
 }
 
-.card-empty-text {
-  text-align: center;
+header button {
+  margin: 0 0 0 1rem;
+  width: auto;
 }
 
-.card-empty-text * {
-  margin-bottom: 0;
+main,
+main.container {
+  max-width: 820px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-right: var(--spacing);
+  padding-left: var(--spacing);
 }
-
-.card-empty-text img:first-child {
-  margin-bottom: 1rem;
-}
-
-.card-empty-text img:last-child {
-  margin-top: 1rem;
-}
-
-form .card {
-  margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
-}
-
-form .card+.grid {
-  padding-left: var(--block-spacing-horizontal);
-  padding-right: var(--block-spacing-horizontal);
-}
-
-form .card>.grid:last-child label,
-form .card>.grid:last-child input,
-form .card>.grid:last-child button {
-  margin-bottom: 0;
-}
-
-/*----- CARD: BUDGET -----*/
-
-.card-budget {
-  position: relative;
-}
-
-.card-budget-month {
-  --primary: #5e35b1;
-  --primary-hover: #3b2171;
-}
-
 
 /*----- TYPOGRAPHY -----*/
 
@@ -76,17 +54,20 @@ big {
   text-align: center;
 }
 
+big.is-negative {
+  color: var(--color-red) !important;
+}
+
+big.is-negative:after {
+  content: " 😬";
+  display: inline-block;
+  padding-left: 1rem;
+  animation: var(--animation-zoom-in);
+}
+
 h1+big {
   margin-top: -2rem;
 }
-
-
-/*----- TABLE -----*/
-
-tfoot td {
-  white-space: nowrap;
-}
-
 
 /*----- BUTTONS -----*/
 
@@ -112,11 +93,16 @@ tfoot td {
   background-color: var(--color-red-hover);
 }
 
-
 .btn-delete,
 .btn-delete-item {
   background-color: var(--color-red);
   border-color: var(--color-red);
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
 }
 
 /*----- FORMS -----*/
@@ -159,6 +145,10 @@ select {
   border-bottom-left-radius: 0;
 }
 
+.input-group .text {
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+}
+
 input[type="number"] {
   text-align: right;
 }
@@ -166,21 +156,26 @@ input[type="number"] {
 /*----- FORM: BUDGET FORM -----*/
 
 .form-budget .grid {
-  grid-template-columns: 40% auto 40px 70px
+  grid-template-columns: 40% auto 70px;
 }
+
 
 .form-budget #spendingCategories .grid {
   grid-template-columns: auto 70px;
 }
 
-.form-budget span.currency {
-  line-height: 3rem;
+
+/*----- TABLES -----*/
+
+thead >*>th,
+tfoot >*>td {
+  --font-size: 0.875em;
+  font-weight: bold;
 }
 
-/*----- FORM: DAILY EXPENSES FORM -----*/
-
-.form-daily-expenses .grid {
-  grid-template-columns: auto auto auto auto 70px
+tfoot td {
+  white-space: nowrap;
+  text-align: right;
 }
 
 /*----- TABLE DAILY EXPENSES -----*/
@@ -200,26 +195,195 @@ input[type="number"] {
   width: 2rem;
 }
 
-/*----- HEADER -----*/
+/*----- NAV TABS -----*/
 
-header {
+.nav-tabs {
+  --border-width: 3px;
+
   display: flex;
-  padding: 1rem 0;
-  justify-content: space-between;
+  gap: 0.5rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: -68px;
 }
 
-header button {
-  margin: 0 0 0 1rem;
-  width: auto;
+.nav-tabs button {
+  background-color: var(--card-background-color);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: var(--border-width) solid var(--primary);
+  height: 68px;
+  margin: 0;
+  position: relative;
 }
 
-/*----- MAIN -----*/
+.nav-tabs button:hover,
+.nav-tabs button:focus,
+.nav-tabs button:active {
+  box-shadow: none;
+}
 
-main,
-main.container {
-  max-width: 820px;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  padding-right: var(--spacing);
-  padding-left: var(--spacing);
+.nav-tabs button:not(.active) {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+.nav-tabs button:not(.active):after {
+  background: var(--primary);
+  bottom: 0;
+  content: "";
+  display: block;
+  height: var(--border-width);
+  left: calc(var(--border-width) * -1);
+  position: absolute;
+  right: calc(var(--border-width) * -1);
+  width: calc(100% + 2 * var(--border-width));
+}
+
+.nav-tabs button:first-child {
+  margin-left: calc(var(--border-width) * -1);
+}
+
+.nav-tabs button:last-child {
+  margin-right: calc(var(--border-width) * -1);
+}
+
+/*----- CARDS -----*/
+
+.card {
+  background: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-box-shadow);
+  margin: var(--block-spacing-vertical) 0;
+  padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+}
+
+.card-empty-text {
+  text-align: center;
+}
+
+.card-empty-text * {
+  margin-bottom: 0;
+}
+
+.card-empty-text img:first-child {
+  margin-bottom: 1rem;
+}
+
+.card-empty-text img:last-child {
+  margin-top: 1rem;
+}
+
+form .card {
+  margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
+}
+
+form .card+.grid {
+  padding-left: var(--block-spacing-horizontal);
+  padding-right: var(--block-spacing-horizontal);
+}
+
+form .card>.grid:last-child label,
+form .card>.grid:last-child input,
+form .card>.grid:last-child button {
+  margin-bottom: 0;
+}
+
+/*----- CARD: BUDGET -----*/
+
+/* variables */
+
+.card-budget {
+  --color-week-view: var(--primary);
+  --color-week-view-hover: var(--primary-hover);
+  --color-month-view: #5e35b1;
+  --color-month-view-hover: #4a288d;
+  
+  --color-active: var(--color-week-view);
+  --color-active-hover: var(--color-week-view-hover);
+  --color-inactive: var(--color-month-view);
+  --color-inactive-hover: var(--color-month-view-hover);
+}
+
+.card-budget.month-active {
+  --color-active: var(--color-month-view);
+  --color-active-hover: var(--color-month-view-hover);
+  --color-inactive: var(--color-week-view);
+  --color-inactive-hover: var(--color-week-view-hover);
+}
+
+/* general */
+
+.card-budget {
+  border: 3px solid var(--color-active);
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  position: relative;
+}
+
+.card-budget h1 {
+  margin-bottom: 0;
+}
+
+.card-budget big {
+  --color-active: var(--color-week-view);
+}
+
+.card-budget small {
+  display: block;
+  min-height: 70px;
+  position: relative;
+}
+
+.card-budget small > div {
+  bottom: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.card-budget mark {
+  border-radius: 25px;
+  display: inline-block;
+  margin-bottom: 0.3rem;
+  padding: 0.25rem 0.75rem;
+  animation: var(--animation-zoom-in);
+}
+
+/* nav tabs */
+
+.card-budget .nav-tabs button {
+  border-color: var(--color-active);
+  font-weight: bold;
+  border-bottom: none;
+}
+
+.card-budget .nav-tabs button:not(.active):after {
+  background-color: var(--color-active);
+}
+
+.card-budget .nav-tabs button:not(.active) {
+  background-color: var(--color-inactive);
+  border-color: var(--color-inactive);
+}
+
+.card-budget .nav-tabs button:not(.active):hover,
+.card-budget .nav-tabs button:not(.active):focus,
+.card-budget .nav-tabs button:not(.active):active {
+  background-color: var(--color-inactive-hover);
+  border-color: var(--color-inactive-hover);
+}
+
+/* nav prev next */
+
+.card-budget .nav-prev-next button {
+  background-color: var(--color-active);
+  border-color: var(--color-active);
+}
+
+.card-budget .nav-prev-next button:hover,
+.card-budget .nav-prev-next button:focus,
+.card-budget .nav-prev-next button:active {
+  background-color: var(--color-active-hover);
+  border-color: var(--color-active-hover);
 }
