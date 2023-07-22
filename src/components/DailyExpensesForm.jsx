@@ -98,9 +98,8 @@ function DailyExpensesForm(props) {
 			)
 		)
 
-		// is the week/month the current one?
 		setIsCurrentTime(
-			(timePeriod === 'month' && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
+			(timePeriod === 'month' && yearToday === +lastDayISO.slice(0, 4) && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
 				(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
 				? true
 				: false
@@ -176,28 +175,39 @@ function DailyExpensesForm(props) {
 
 	return (
 		<>
-			<div className={`card card-budget card-budget-${timePeriod}`}>
+			<div className={`card card-budget ${timePeriod}-active`}>
 				<div className="nav-tabs">
-					<button onClick={() => setTimePeriod('week')}>weekly</button>
-					<button onClick={() => setTimePeriod('month')}>monthly</button>
+					<button onClick={() => setTimePeriod('week')} className={`btn-week ${timePeriod === 'week' ? 'active' : ''}`}>
+						week view
+					</button>
+					<button onClick={() => setTimePeriod('month')} className={`btn-month ${timePeriod === 'month' ? 'active' : ''}`}>
+						month view
+					</button>
 				</div>
 				<small>
 					{isCurrentTime ? <mark>current {timePeriod}</mark> : null}
 					<div>
-						{writeOutDate(firstDayISO)} – {writeOutDate(lastDayISO)}
+						<time dateTime={firstDayISO}>{writeOutDate(firstDayISO)}</time>
+						{' – '}
+						<time dateTime={lastDayISO}>{writeOutDate(lastDayISO)}</time>
 					</div>
 				</small>
 				<h1>Budget left this {timePeriod}:</h1>
-				<big>
-					{budgetLeft.toFixed(2)} {propBudgetData.currency}
-				</big>
-				of {budgetTotal.toFixed(2)} {propBudgetData.currency}
-				<br />
-				<br />
-				<div className="grid">
-					<button onClick={() => setNumOfItemsToNavigate((prev) => prev - 1)}>« prev {timePeriod}</button>
-					<button disabled={isCurrentTime} onClick={() => setNumOfItemsToNavigate((prev) => prev + 1)}>
-						» next {timePeriod}
+				<p>
+					<big className={`${budgetLeft < 0 ? 'is-negative' : null}`}>
+						{budgetLeft.toFixed(2)} {propBudgetData.currency}
+					</big>
+					of {budgetTotal.toFixed(2)} {propBudgetData.currency}
+				</p>
+				<div className="btn-group nav-prev-next">
+					<button onClick={() => setNumOfItemsToNavigate((prev) => prev - 1)} aria-label={`go to previous ${timePeriod}`}>
+						«
+					</button>
+					<button
+						onClick={() => setNumOfItemsToNavigate((prev) => prev + 1)}
+						aria-label={`go to next ${timePeriod}`}
+						disabled={isCurrentTime}>
+						»
 					</button>
 				</div>
 			</div>
@@ -210,9 +220,15 @@ function DailyExpensesForm(props) {
 							return <option key={elem + '-' + index}>{elem}</option>
 						})}
 					</select>
+				</div>
+				<div className="grid">
 					<input type="text" name="name" placeholder="name"></input>
-					<input type="number" name="amount" placeholder="0,00" step=".01" required></input>
-					<button className="btn-add-item">+</button>
+					<div className="input-group">
+						<span className="input-group-text">-</span>
+						<input type="number" name="amount" placeholder="0,00" step=".01" required></input>
+						<span className="text">€</span>
+						<button className="btn-add-item">+</button>
+					</div>
 				</div>
 			</form>
 			<div className="card">
@@ -235,6 +251,7 @@ function DailyExpensesForm(props) {
 						</thead>
 						<tbody>
 							{dailyExpensesArr
+								.sort((a, b) => (a.date > b.date ? -1 : b.date > a.date ? 1 : 0))
 								.map((dailyExpense, index) => {
 									return (
 										<tr key={dailyExpense._id}>
@@ -258,18 +275,17 @@ function DailyExpensesForm(props) {
 											</td>
 										</tr>
 									)
-								})
-								.sort((a, b) => (a.date > b.date ? 1 : b.date > a.date ? -1 : 0))}
+								})}
 						</tbody>
 						<tfoot>
 							<tr>
 								<td></td>
 								<td></td>
 								<td></td>
-								<td style={{ textAlign: 'right' }}>
-									<strong>
-										-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
-									</strong>
+								<td>
+									-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
+									<br />
+									Left: {budgetLeft.toFixed(2)} {propBudgetData.currency}
 								</td>
 							</tr>
 						</tfoot>
