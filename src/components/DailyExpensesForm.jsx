@@ -64,10 +64,12 @@ function DailyExpensesForm(props) {
 	const [numOfItemsToNavigate, setNumOfItemsToNavigate] = useState(0)
 
 	useEffect(() => {
+		setNumOfItemsToNavigate(0)
 		timePeriod === 'week' ? setBudgetTotal((monthlyBudget / 31) * 7) : setBudgetTotal(monthlyBudget)
 	}, [timePeriod, monthlyBudget])
 
 	useEffect(() => {
+		console.log('INITIAL numOfItemsToNavigate', numOfItemsToNavigate)
 		// Convert ISO format strings to JavaScript Date objects
 		let currentFirstDay = new Date(firstDay)
 		let currentLastDay = new Date(lastDay)
@@ -83,6 +85,8 @@ function DailyExpensesForm(props) {
 			newFirstDay = new Date(yearToday, monthToday + numOfItemsToNavigate, 1, timezoneOffsetHours)
 			newLastDay = new Date(yearToday, monthToday + numOfItemsToNavigate + 1, 0, timezoneOffsetHours)
 		}
+
+		console.log('AFTER numOfItemsToNavigate', numOfItemsToNavigate)
 
 		// Convert back to ISO format strings
 		// Update the state with the new ISO format strings
