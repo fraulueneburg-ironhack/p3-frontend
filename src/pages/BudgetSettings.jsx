@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import BudgetForm from '../components/BudgetForm'
 import axios from 'axios'
-import { API_URL } from "../config"
+import { API_URL } from '../config'
 
 function BudgetSettings() {
 	const [existingBudget, setExistingBudget] = useState([])
@@ -27,7 +27,7 @@ function BudgetSettings() {
 	if (dataLoaded) {
 		return (
 			<>
-				<h1>Your budget:</h1>
+				<h1>Settings</h1>
 				<p>Add your monthly earnings, expenses and spending categories here:</p>
 				<BudgetForm budgetData={existingBudget} />
 			</>

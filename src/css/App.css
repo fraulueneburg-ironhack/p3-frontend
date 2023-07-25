@@ -18,11 +18,23 @@
   100%  { transform: scale(1); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animation-zoom-in: none;
+  }
+}
+
+
 /*----- GENERAL -----*/
 
 body {
   text-align: center;
   padding-bottom: 3rem;
+}
+
+#root > .App {
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -36,13 +48,21 @@ header button {
   width: auto;
 }
 
+main {
+  flex: 1;
+}
+
 main,
 main.container {
   max-width: 820px;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  padding-right: var(--spacing);
-  padding-left: var(--spacing);
+  padding: var(--spacing);
+}
+
+/*----- GRID -----*/
+
+.column {
+  text-align: left;
+  padding-top: 0;
 }
 
 /*----- TYPOGRAPHY -----*/
@@ -63,6 +83,22 @@ big.is-negative:after {
   display: inline-block;
   padding-left: 1rem;
   animation: var(--animation-zoom-in);
+}
+
+h1 {
+  font-size: 2.75rem;
+  margin-bottom: 2rem;
+}
+
+h1 + h2 {
+  margin-top: -2rem;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+h2 {
+    --font-size: 2.25rem;
+    --typography-spacing-vertical: 2rem;
 }
 
 h1+big {
@@ -178,6 +214,10 @@ input[type="number"] {
 
 /*----- TABLES -----*/
 
+table {
+  margin: 0;
+}
+
 thead >*>th,
 tfoot >*>td {
   --font-size: 0.875em;
@@ -266,7 +306,7 @@ tfoot td {
   border-radius: var(--border-radius);
   box-shadow: var(--card-box-shadow);
   margin: var(--block-spacing-vertical) 0;
-  padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+  padding: calc(var(--block-spacing-vertical) / 2) var(--block-spacing-horizontal);
 }
 
 .card-empty-text {
@@ -300,6 +340,11 @@ form .card>.grid:last-child button {
   margin-bottom: 0;
 }
 
+.form-daily-expenses + .card {
+  margin-top: 0;
+  padding: calc(var(--block-spacing-vertical) / 2) var(--block-spacing-horizontal);
+}
+
 /*----- CARD: BUDGET -----*/
 
 /* variables */
@@ -329,10 +374,12 @@ form .card>.grid:last-child button {
   border: 3px solid var(--color-active);
   border-top-right-radius: 0;
   border-top-left-radius: 0;
+  margin: 68px 0 0;
   position: relative;
 }
 
-.card-budget h1 {
+.card-budget h2 {
+  font-size: 2rem;
   margin-bottom: 0;
 }
 
@@ -390,6 +437,7 @@ form .card>.grid:last-child button {
 .card-budget .nav-prev-next button {
   background-color: var(--color-active);
   border-color: var(--color-active);
+  margin-bottom: 0;
 }
 
 .card-budget .nav-prev-next button:hover,
@@ -397,4 +445,15 @@ form .card>.grid:last-child button {
 .card-budget .nav-prev-next button:active {
   background-color: var(--color-active-hover);
   border-color: var(--color-active-hover);
+}
+
+
+/*---- CHARTS -----*/
+
+.chart-container {
+  max-height: 500px;
+}
+
+.chart-container > canvas {
+  margin: 0 auto;
 }

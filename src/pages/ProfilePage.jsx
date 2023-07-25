@@ -81,7 +81,7 @@ function ProfilePage() {
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				<h1>Edit Profile details</h1>
+				<h1>My Profile</h1>
 				<input
 					type="text"
 					name="name"

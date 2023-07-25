@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import DailyExpensesForm from '../components/DailyExpensesForm'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { API_URL } from "../config"
+import { API_URL } from '../config'
 
 function BudgetOverview() {
 	const [existingBudget, setExistingBudget] = useState([])
@@ -30,6 +30,7 @@ function BudgetOverview() {
 	if (dataLoaded && existingBudget.length > 0) {
 		return (
 			<>
+				<h1>Your Budget</h1>
 				<DailyExpensesForm budgetData={existingBudget} dailyExpensesData={existingDailyExpenses} />
 			</>
 		)
