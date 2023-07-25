@@ -378,8 +378,7 @@ function BudgetForm(props) {
 							</button>
 						</div>
 					</fieldset>
-
-					<button>Start planning</button>
+					<button>Save changes and start planning</button>
 				</form>
 			</>
 		)

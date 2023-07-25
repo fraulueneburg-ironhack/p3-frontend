@@ -55,6 +55,7 @@ function DailyExpensesForm(props) {
 	const dayToday = new Date().getDay()
 	const monthToday = new Date().getMonth()
 	const yearToday = new Date().getFullYear()
+	const dateTodayISO = new Date().toISOString().slice(0, 10)
 
 	const [isCurrentTime, setIsCurrentTime] = useState(true)
 
@@ -187,6 +188,10 @@ function DailyExpensesForm(props) {
 		)
 		setdailyExpensesTotal(calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 		setBudgetLeft(budgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
+
+		event.target.category.value = ''
+		event.target.name.value = ''
+		event.target.amount.value = ''
 	}
 
 	// DELETE EXPENSE
@@ -268,7 +273,13 @@ function DailyExpensesForm(props) {
 			<h2>Add an expense:</h2>
 			<form onSubmit={handleAddDailyExpense} className="form-daily-expenses">
 				<div className="grid">
-					<input type="date" name="date" min={firstDayISO} max={lastDayISO} required></input>
+					<input
+						type="date"
+						name="date"
+						min={firstDayISO}
+						max={lastDayISO}
+						value={`${isCurrentTime ? dateTodayISO : ''}`}
+						required></input>
 					<select name="category">
 						{propBudgetData.spendingCategories.map((elem, index) => {
 							return <option key={elem + '-' + index}>{elem}</option>
@@ -338,8 +349,6 @@ function DailyExpensesForm(props) {
 								<td></td>
 								<td>
 									-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
-									<br />
-									Left: {budgetLeft.toFixed(2)} {propBudgetData.currency}
 								</td>
 							</tr>
 						</tfoot>

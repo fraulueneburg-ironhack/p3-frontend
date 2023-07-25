@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth.context'
-import { API_URL } from "../config"
+import { API_URL } from '../config'
 
 function ProfilePage() {
 	const [nameInput, setNameInput] = useState()
@@ -42,12 +42,15 @@ function ProfilePage() {
 				},
 				{ headers: { authorization: `Bearer ${gotToken}` } }
 			)
-			console.log(edit.data.updatedUser.email)
 			setNameInput(edit.data.updatedUser.name)
 			setEmailInput(edit.data.updatedUser.email)
 			setPasswordInput('')
+
+			e.target.classList.add('is-saved')
+			setTimeout(() => {
+				e.target.classList.remove('is-saved')
+			}, 5000)
 		} catch (err) {
-			console.log('im in the catch block')
 			console.log('THIS IS THE ERR', err)
 			setNameInput('')
 			setEmailInput('')
@@ -100,7 +103,7 @@ function ProfilePage() {
 					placeholder="*********"
 					onChange={(e) => setPasswordInput(e.target.value)}
 				/>
-				<input type="submit" value="SAVE" />
+				<button type="submit">SAVE</button>
 			</form>
 
 			<button className="btn-delete" type="submit" onClick={handleDelete}>
