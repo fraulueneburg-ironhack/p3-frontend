@@ -117,8 +117,8 @@ function DailyExpensesForm(props) {
         data: categoriesTotalArr,
         backgroundColor: [
           "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
+          "#8e24aa",
+          " #7cb342",
           "#f3ba2f",
           "#2a71d0",
         ],
