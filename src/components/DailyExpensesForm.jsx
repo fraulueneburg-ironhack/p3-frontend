@@ -51,6 +51,7 @@ function DailyExpensesForm(props) {
 	const dayToday = new Date().getDay()
 	const monthToday = new Date().getMonth()
 	const yearToday = new Date().getFullYear()
+	const dateTodayISO = new Date().toISOString().slice(0, 10)
 
 	const [isCurrentTime, setIsCurrentTime] = useState(true)
 
@@ -80,7 +81,6 @@ function DailyExpensesForm(props) {
 	}, [timePeriod, monthlyBudget])
 
 	useEffect(() => {
-		console.log('INITIAL numOfItemsToNavigate', numOfItemsToNavigate)
 		// Convert ISO format strings to JavaScript Date objects
 		let currentFirstDay = new Date(firstDay)
 		let currentLastDay = new Date(lastDay)
@@ -96,8 +96,6 @@ function DailyExpensesForm(props) {
 			newFirstDay = new Date(yearToday, monthToday + numOfItemsToNavigate, 1, timezoneOffsetHours)
 			newLastDay = new Date(yearToday, monthToday + numOfItemsToNavigate + 1, 0, timezoneOffsetHours)
 		}
-
-		console.log('AFTER numOfItemsToNavigate', numOfItemsToNavigate)
 
 		// Convert back to ISO format strings
 		// Update the state with the new ISO format strings
@@ -162,6 +160,10 @@ function DailyExpensesForm(props) {
 		)
 		setdailyExpensesTotal(calculateTotal([newDailyExpense, ...dailyExpensesArr]))
 		setBudgetLeft(budgetTotal - calculateTotal([newDailyExpense, ...dailyExpensesArr]))
+
+		event.target.category.value = ''
+		event.target.name.value = ''
+		event.target.amount.value = ''
 	}
 
 	// DELETE EXPENSE
@@ -229,7 +231,13 @@ function DailyExpensesForm(props) {
 			<h2>Add an expense:</h2>
 			<form onSubmit={handleAddDailyExpense} className="form-daily-expenses">
 				<div className="grid">
-					<input type="date" name="date" min={firstDayISO} max={lastDayISO} required></input>
+					<input
+						type="date"
+						name="date"
+						min={firstDayISO}
+						max={lastDayISO}
+						value={`${isCurrentTime ? dateTodayISO : ''}`}
+						required></input>
 					<select name="category">
 						{propBudgetData.spendingCategories.map((elem, index) => {
 							return <option key={elem + '-' + index}>{elem}</option>
@@ -299,8 +307,6 @@ function DailyExpensesForm(props) {
 								<td></td>
 								<td>
 									-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
-									<br />
-									Left: {budgetLeft.toFixed(2)} {propBudgetData.currency}
 								</td>
 							</tr>
 						</tfoot>
