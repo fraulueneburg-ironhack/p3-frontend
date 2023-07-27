@@ -5,7 +5,7 @@ function HomePage() {
 	return (
 		<>
 			<h1>Welcome to Sparsam</h1>
-			<h2>The awesome web app with a cute dog on its cover</h2>
+			<h2>An awesome budgeting app with a cute dog on its cover</h2>
 			<div className="columns">
 				<div className="column">
 					<img src={cuteDog} alt="" />
