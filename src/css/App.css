@@ -13,9 +13,15 @@
 /* subtle animations */
 
 @keyframes zoom-in {
-  0%    { transform: scale(1); }
-  50%   { transform: scale(1.15) }
-  100%  { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -23,7 +29,6 @@
     --animation-zoom-in: none;
   }
 }
-
 
 /*----- GENERAL -----*/
 
@@ -58,8 +63,34 @@ main.container {
   padding: var(--spacing);
 }
 
-.nav_main [aria-current=page] {
+.nav_main [aria-current="page"] {
   --background-color: var(--primary-focus);
+}
+
+/* this is CSS for the responsive Nav */
+nav {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+header nav {
+  position: fixed;
+  top: -100vh;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background-color: var(--mainColor);
+  transition: 1s;
+}
+
+header nav.active {
+  transform: translateY(100vh);
 }
 
 /*----- GRID -----*/
@@ -101,11 +132,11 @@ h1 + h2 {
 }
 
 h2 {
-    --font-size: 2.25rem;
-    --typography-spacing-vertical: 2rem;
+  --font-size: 2.25rem;
+  --typography-spacing-vertical: 2rem;
 }
 
-h1+big {
+h1 + big {
   margin-top: -2rem;
 }
 
@@ -186,7 +217,10 @@ fieldset legend {
 }
 
 select {
-  height: calc(1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 + var(--border-width) * 2);
+  height: calc(
+    1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 +
+      var(--border-width) * 2
+  );
 }
 
 .input-group {
@@ -200,17 +234,22 @@ select {
   border-top-left-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
   display: block;
-  height: calc(1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 + var(--border-width) * 2);
-  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  height: calc(
+    1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 +
+      var(--border-width) * 2
+  );
+  padding: var(--form-element-spacing-vertical)
+    var(--form-element-spacing-horizontal);
 }
 
-.input-group-text+input {
+.input-group-text + input {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
 .input-group .text {
-  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  padding: var(--form-element-spacing-vertical)
+    var(--form-element-spacing-horizontal);
 }
 
 input[type="number"] {
@@ -223,11 +262,9 @@ input[type="number"] {
   grid-template-columns: 40% auto 70px;
 }
 
-
 .form-budget #spendingCategories .grid {
   grid-template-columns: auto 70px;
 }
-
 
 /*----- TABLES -----*/
 
@@ -243,8 +280,8 @@ tr.greyed-out .color-indicator {
   background-color: currentColor !important;
 }
 
-thead >*>th,
-tfoot >*>td {
+thead > * > th,
+tfoot > * > td {
   --font-size: 0.875em;
   font-weight: bold;
 }
@@ -280,7 +317,6 @@ tfoot td {
 .table-daily-expenses .btn-edit-item {
   background-color: var(--primary);
 }
-
 
 /*----- NAV TABS -----*/
 
@@ -342,14 +378,16 @@ tfoot td {
   border-radius: var(--border-radius);
   box-shadow: var(--card-box-shadow);
   margin: var(--block-spacing-vertical) 0;
-  padding: calc(var(--block-spacing-vertical) / 2) var(--block-spacing-horizontal);
+  padding: calc(var(--block-spacing-vertical) / 2)
+    var(--block-spacing-horizontal);
 }
 
 .card-empty-text {
   text-align: center;
 }
 
-.card-empty-text h4, strong {
+.card-empty-text h4,
+strong {
   margin-bottom: 0.25rem;
 }
 
@@ -366,23 +404,24 @@ tfoot td {
 }
 
 form .card {
-  margin: 0 0 calc(var(--block-spacing-vertical) / 3*2);
+  margin: 0 0 calc(var(--block-spacing-vertical) / 3 * 2);
 }
 
-form .card+.grid {
+form .card + .grid {
   padding-left: var(--block-spacing-horizontal);
   padding-right: var(--block-spacing-horizontal);
 }
 
-form .card>.grid:last-child label,
-form .card>.grid:last-child input,
-form .card>.grid:last-child button {
+form .card > .grid:last-child label,
+form .card > .grid:last-child input,
+form .card > .grid:last-child button {
   margin-bottom: 0;
 }
 
 .form-daily-expenses + .card {
   margin-top: 0;
-  padding: calc(var(--block-spacing-vertical) / 2) var(--block-spacing-horizontal);
+  padding: calc(var(--block-spacing-vertical) / 2)
+    var(--block-spacing-horizontal);
 }
 
 /*----- CARD: BUDGET -----*/
@@ -394,7 +433,7 @@ form .card>.grid:last-child button {
   --color-week-view-hover: var(--primary-hover);
   --color-month-view: #5e35b1;
   --color-month-view-hover: #4a288d;
-  
+
   --color-active: var(--color-week-view);
   --color-active-hover: var(--color-week-view-hover);
   --color-inactive: var(--color-month-view);
@@ -486,7 +525,6 @@ form .card>.grid:last-child button {
   background-color: var(--color-active-hover);
   border-color: var(--color-active-hover);
 }
-
 
 /*---- CHARTS -----*/
 
