@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
+import axios from 'axios'
 import earningsGif from '../assets/gif-no-earnings.gif'
 import expensesGif from '../assets/gif-no-expenses.gif'
 import spendingsGif from '../assets/gif-no-spendings.gif'
-import { API_URL } from '../config'
-
-//import savingsGif from "../assets/gif-no-savings.gif"
-import axios from 'axios'
 
 function BudgetForm(props) {
 	const navigate = useNavigate()
