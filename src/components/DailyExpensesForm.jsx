@@ -145,21 +145,13 @@ function DailyExpensesForm(props) {
 		// check if today’s week/month
 		setIsCurrentTime(
 			(timePeriod === 'month' && yearToday === +lastDayISO.slice(0, 4) && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
-				(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
+				(timePeriod === 'week' &&
+					new Date().toISOString().slice(0, 10) >= firstDayISO &&
+					new Date().toISOString().slice(0, 10) <= lastDayISO)
 				? true
 				: false
 		)
-	}, [
-		firstDay,
-		lastDay,
-		firstDayISO,
-		lastDayISO,
-		numOfItemsToNavigate,
-		timePeriod,
-		monthToday,
-		yearToday,
-		propDailyExpensesData,
-	])
+	}, [firstDayISO, lastDayISO, numOfItemsToNavigate, timePeriod, propDailyExpensesData])
 
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
