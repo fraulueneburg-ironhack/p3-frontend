@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config'
 import axios from 'axios'
+import { ReactComponent as IconMinus } from '../assets/icon-minus.svg'
+import { ReactComponent as IconPlus } from '../assets/icon-plus.svg'
 import earningsGif from '../assets/gif-no-earnings.gif'
 import expensesGif from '../assets/gif-no-expenses.gif'
 import spendingsGif from '../assets/gif-no-spendings.gif'
@@ -331,7 +333,7 @@ function BudgetForm(props) {
 								<span className="text">{`${currency}`}</span>
 							</div>
 							<button className="btn-add-item" onClick={handleAddExpense}>
-								+
+								<IconPlus />
 							</button>
 						</div>
 					</fieldset>
