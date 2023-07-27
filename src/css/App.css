@@ -226,6 +226,14 @@ table {
   margin: 0;
 }
 
+tr.greyed-out {
+  opacity: 0.3;
+}
+
+tr.greyed-out .color-indicator {
+  background-color: currentColor !important;
+}
+
 thead >*>th,
 tfoot >*>td {
   --font-size: 0.875em;
@@ -319,6 +327,10 @@ tfoot td {
 
 .card-empty-text {
   text-align: center;
+}
+
+.card-empty-text h4, strong {
+  margin-bottom: 0.25rem;
 }
 
 .card-empty-text * {
@@ -457,10 +469,6 @@ form .card>.grid:last-child button {
 
 
 /*---- CHARTS -----*/
-
-.chart-container {
-  max-height: 500px;
-}
 
 .chart-container > canvas {
   margin: 0 auto;

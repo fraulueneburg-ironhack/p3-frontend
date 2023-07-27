@@ -1,17 +1,32 @@
+import axios from 'axios'
+import Chart from 'chart.js/auto'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
 import { API_URL } from '../config'
-import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js'
 import { Pie } from 'react-chartjs-2'
+import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
+import noChartGif from '../assets/gif-no-chart.gif'
 
 function DailyExpensesForm(props) {
 	const navigate = useNavigate()
 	const propBudgetData = props.budgetData[0]
+	const categoriesArr = propBudgetData.spendingCategories
+	const currency = propBudgetData.currency
 	const propDailyExpensesData = props.dailyExpensesData
 	const gotToken = localStorage.getItem('authToken')
+	const chartColorsArr = [
+		'#00acc1',
+		'#8e24aa',
+		' #7cb342',
+		'#f3ba2f',
+		'#2a71d0',
+		'#546e7a',
+		'#00897b',
+		'##ffb300',
+		'#5e35b1',
+		'#d81b60',
+	]
 
 	// GENERAL FUNCTIONS
 
@@ -60,11 +75,10 @@ function DailyExpensesForm(props) {
 
 	const [firstDay, setFirstDay] = useState(new Date(new Date().setDate(new Date().getDate() + ((-dayToday - 2) % 7))))
 	const [lastDay, setLastDay] = useState(new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6))))
-
 	const [firstDayISO, setFirstDayISO] = useState(firstDay.toISOString().slice(0, 10))
 	const [lastDayISO, setLastDayISO] = useState(lastDay.toISOString().slice(0, 10))
 
-	// DAILY EXPENSES FOR CURRENT WEEK
+	// DAILY EXPENSES
 
 	const [dailyExpensesArr, setDailyExpensesArr] = useState(
 		propDailyExpensesData.filter(
@@ -77,6 +91,18 @@ function DailyExpensesForm(props) {
 	const [budgetLeft, setBudgetLeft] = useState(budgetTotal - dailyExpensesTotal)
 	const [numOfItemsToNavigate, setNumOfItemsToNavigate] = useState(0)
 
+	// SUM SPENT PER CATEGORY
+
+	const [categoriesTotalArr, setCategoriesTotalArr] = useState(
+		categoriesArr.map((oneCategory) => {
+			return dailyExpensesArr.reduce((acc, curr) => {
+				return curr.category === oneCategory ? acc + curr.amount : acc
+			}, 0)
+		})
+	)
+
+	// NAVIGATE BACK/FORTH
+
 	useEffect(() => {
 		setNumOfItemsToNavigate(0)
 		timePeriod === 'week' ? setBudgetTotal((monthlyBudget / 31) * 7) : setBudgetTotal(monthlyBudget)
@@ -88,7 +114,7 @@ function DailyExpensesForm(props) {
 		let currentLastDay = new Date(lastDay)
 		const oneWeek = 7 * 24 * 60 * 60 * 1000 // One week in milliseconds
 
-		// Calculate the new firstDayOfTheWeek and lastDayOfTheWeek based on the current state
+		// Calculate new first and last day
 		let newFirstDay = new Date(currentFirstDay.getTime() + numOfItemsToNavigate * oneWeek)
 		let newLastDay = new Date(currentLastDay.getTime() + numOfItemsToNavigate * oneWeek)
 
@@ -99,20 +125,18 @@ function DailyExpensesForm(props) {
 			newLastDay = new Date(yearToday, monthToday + numOfItemsToNavigate + 1, 0, timezoneOffsetHours)
 		}
 
-		// Convert back to ISO format strings
-		// Update the state with the new ISO format strings
+		// convert back to ISO format strings + update state
 		const newFirstDayISO = newFirstDay.toISOString().slice(0, 10)
 		const newLastDayISO = newLastDay.toISOString().slice(0, 10)
-
 		setFirstDayISO(newFirstDayISO)
 		setLastDayISO(newLastDayISO)
-
 		setDailyExpensesArr(
 			propDailyExpensesData.filter(
 				(element) => element.date.slice(0, 10) >= firstDayISO && element.date.slice(0, 10) <= lastDayISO
 			)
 		)
 
+		// check if today’s week/month
 		setIsCurrentTime(
 			(timePeriod === 'month' && yearToday === +lastDayISO.slice(0, 4) && monthToday + 1 === +lastDayISO.slice(5, 7)) ||
 				(timePeriod === 'week' && new Date().toISOString() >= firstDayISO && new Date().toISOString() <= lastDayISO)
@@ -134,7 +158,31 @@ function DailyExpensesForm(props) {
 	useEffect(() => {
 		setdailyExpensesTotal(calculateTotal(dailyExpensesArr))
 		setBudgetLeft(budgetTotal - calculateTotal(dailyExpensesArr))
-	}, [dailyExpensesArr, budgetTotal])
+
+		if (timePeriod === 'month') {
+			setCategoriesTotalArr(
+				categoriesArr.map((oneCategory) => {
+					return dailyExpensesArr.reduce((acc, curr) => {
+						return curr.category === oneCategory ? acc + curr.amount : acc
+					}, 0)
+				})
+			)
+		}
+	}, [dailyExpensesArr, budgetTotal, categoriesArr, timePeriod])
+
+	useEffect(() => {
+		setChartData({
+			labels: categoriesArr,
+			datasets: [
+				{
+					data: categoriesTotalArr,
+					backgroundColor: chartColorsArr,
+					borderColor: '#11191f',
+					borderWidth: 2,
+				},
+			],
+		})
+	}, [categoriesArr, categoriesTotalArr])
 
 	// ADD EXPENSE
 
@@ -172,7 +220,7 @@ function DailyExpensesForm(props) {
 	const handleDeleteDailyExpense = async (index, event) => {
 		event.preventDefault()
 		const filteredDailyExpensesArr = dailyExpensesArr.filter((elem, i) => {
-			if (i !== index) return elem
+			return i !== index ? elem : null
 		})
 		setDailyExpensesArr(filteredDailyExpensesArr)
 		const expenseId = event.target.getAttribute('data-key')
@@ -190,24 +238,13 @@ function DailyExpensesForm(props) {
 
 	// CHART
 
-	const categoriesArr = propBudgetData.spendingCategories
-	const categoriesTotalArr = categoriesArr.map((oneCategory, index, arr) => {
-		return dailyExpensesArr.reduce((acc, curr) => {
-			if (curr.category === oneCategory) {
-				return acc + curr.amount
-			} else {
-				return acc
-			}
-		}, 0)
-	})
-
 	Chart.register(CategoryScale)
 	const [chartData, setChartData] = useState({
 		labels: categoriesArr,
 		datasets: [
 			{
 				data: categoriesTotalArr,
-				backgroundColor: ['rgba(75,192,192,1)', '#8e24aa', ' #7cb342', '#f3ba2f', '#2a71d0'],
+				backgroundColor: chartColorsArr,
 				borderColor: '#11191f',
 				borderWidth: 2,
 			},
@@ -237,9 +274,9 @@ function DailyExpensesForm(props) {
 					<h2>Budget left this {timePeriod}:</h2>
 					<p>
 						<big className={`${budgetLeft < 0 ? 'is-negative' : null}`}>
-							{budgetLeft.toFixed(2)} {propBudgetData.currency}
+							{budgetLeft.toFixed(2)} {currency}
 						</big>
-						of {budgetTotal.toFixed(2)} {propBudgetData.currency}
+						of {budgetTotal.toFixed(2)} {currency}
 					</p>
 					<div className="btn-group nav-prev-next">
 						<button onClick={() => setNumOfItemsToNavigate((prev) => prev - 1)} aria-label={`go to previous ${timePeriod}`}>
@@ -260,45 +297,46 @@ function DailyExpensesForm(props) {
 						<h2>Budget spent by Category:</h2>
 						<div className="columns is-vcentered">
 							<div className="column chart-container">
-								<Pie
-									data={chartData}
-									options={{
-										responsive: true,
-										plugins: {
-											title: {
-												display: true,
-											},
-											legend: {
-												position: 'bottom',
-												labels: {
-													boxWidth: 20,
-													boxHeight: 20,
-													font: {
+								{dailyExpensesTotal <= 0 ? (
+									<div className="card">
+										<div className="card-empty-text">
+											<img src={noChartGif} alt="" />
+											<h4>No chart to display.</h4>
+											<p>
+												Wow. You spent 0,00{currency} this {timePeriod}.<br />
+												Good job. But also: Are you sure? 🤔
+											</p>
+										</div>
+									</div>
+								) : (
+									<Pie
+										data={chartData}
+										options={{
+											responsive: true,
+											plugins: {
+												title: { display: true },
+												legend: { display: false },
+												tooltip: {
+													displayColors: false,
+													padding: 12,
+													callbacks: {
+														label: (item) => `${item.formattedValue}${currency}`,
+													},
+													titleFont: {
+														size: 16,
+														family: 'system-ui',
+													},
+													bodyFont: {
 														size: 16,
 														family: 'system-ui',
 													},
 												},
 											},
-											tooltip: {
-												displayColors: false,
-												padding: 12,
-												callbacks: {
-													label: (item) => `${item.formattedValue}${propBudgetData.currency}`,
-												},
-												titleFont: {
-													size: 16,
-													family: 'system-ui',
-												},
-												bodyFont: {
-													size: 16,
-													family: 'system-ui',
-												},
-											},
-										},
-									}}
-								/>
+										}}
+									/>
+								)}
 							</div>
-							<div class="column">
+							<div className="column">
 								<table>
 									<thead>
 										<tr>
@@ -307,12 +345,15 @@ function DailyExpensesForm(props) {
 										</tr>
 									</thead>
 									<tbody>
-										{categoriesArr.map((elem, index) => {
+										{categoriesTotalArr.map((elem, index) => {
 											return (
-												<tr>
-													<td>{elem}</td>
+												<tr className={elem > 0 ? null : 'greyed-out'}>
+													<td>
+														<div className="color-indicator" style={{ backgroundColor: chartColorsArr[index] }}></div>{' '}
+														{categoriesArr[index]}
+													</td>
 													<td style={{ textAlign: 'right' }}>
-														{categoriesTotalArr[index].toFixed(2)} {propBudgetData.currency}
+														{elem.toFixed(2)} {currency}
 													</td>
 												</tr>
 											)
@@ -327,7 +368,7 @@ function DailyExpensesForm(props) {
 														return acc + curr
 													})
 													.toFixed(2)}
-												{` ${propBudgetData.currency}`}
+												{` ${currency}`}
 											</td>
 										</tr>
 									</tfoot>
@@ -375,7 +416,7 @@ function DailyExpensesForm(props) {
 						<table className="table-daily-expenses">
 							<thead>
 								<tr>
-									<th style={{ width: '130px' }}>Date</th>
+									<th style={{ width: '140px' }}>Date</th>
 									<th>Category</th>
 									<th>Name</th>
 									<th style={{ textAlign: 'right' }}>Amount</th>
@@ -388,7 +429,7 @@ function DailyExpensesForm(props) {
 									.map((dailyExpense, index) => {
 										return (
 											<tr key={dailyExpense._id}>
-												<td style={{ width: '130px' }}>
+												<td style={{ width: '140px' }}>
 													<time dateTime={dailyExpense.date}>{writeOutDate(dailyExpense.date)}</time>
 												</td>
 												<td>
@@ -396,7 +437,7 @@ function DailyExpensesForm(props) {
 												</td>
 												<td>{dailyExpense.name}</td>
 												<td style={{ textAlign: 'right' }}>
-													-{dailyExpense.amount.toFixed(2)} {propBudgetData.currency}
+													-{dailyExpense.amount.toFixed(2)} {currency}
 												</td>
 												<td>
 													<button
@@ -416,7 +457,7 @@ function DailyExpensesForm(props) {
 									<td></td>
 									<td></td>
 									<td>
-										-{(budgetTotal - budgetLeft).toFixed(2)} {propBudgetData.currency}
+										-{(budgetTotal - budgetLeft).toFixed(2)} {currency}
 									</td>
 								</tr>
 							</tfoot>
