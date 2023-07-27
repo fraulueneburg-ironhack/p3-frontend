@@ -7,23 +7,33 @@ function Navbar() {
 
 	return (
 		<>
-			<nav>
+			<nav className="nav_main">
 				{isLoggedIn ? (
 					<ul>
 						<li>
-							<NavLink to="/">Home</NavLink>
+							<NavLink to="/" {...({ isActive }) => (isActive ? 'aria-current="page"' : null)}>
+								Home
+							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/auth/profile">My Profile</NavLink>
+							<NavLink to="/auth/profile" end {...({ isActive }) => (isActive ? 'aria-current="page"' : null)}>
+								My Profile
+							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/budget/settings">Settings</NavLink>
+							<NavLink to="/budget/settings" end {...({ isActive }) => (isActive ? 'aria-current="page"' : null)}>
+								Settings
+							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/budget">Budget</NavLink>
+							<NavLink to="/budget" end {...({ isActive }) => (isActive ? 'aria-current="page"' : null)}>
+								Budget
+							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/saving-goals">Saving Goals</NavLink>
+							<NavLink to="/saving-goals" end {...({ isActive }) => (isActive ? 'aria-current="page"' : null)}>
+								Saving Goals
+							</NavLink>
 						</li>
 					</ul>
 				) : (

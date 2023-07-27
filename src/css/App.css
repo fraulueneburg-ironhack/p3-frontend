@@ -58,6 +58,10 @@ main.container {
   padding: var(--spacing);
 }
 
+.nav_main [aria-current=page] {
+  --background-color: var(--primary-focus);
+}
+
 /*----- GRID -----*/
 
 .column {
@@ -103,6 +107,10 @@ h2 {
 
 h1+big {
   margin-top: -2rem;
+}
+
+main a {
+  text-decoration: underline;
 }
 
 /*----- BUTTONS -----*/
@@ -456,4 +464,12 @@ form .card>.grid:last-child button {
 
 .chart-container > canvas {
   margin: 0 auto;
+}
+
+.color-indicator {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+  width: 0.8rem;
+  height: 0.8rem;
 }
