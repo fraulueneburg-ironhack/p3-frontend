@@ -18,14 +18,15 @@ function DailyExpensesForm(props) {
 	const chartColorsArr = [
 		'#00acc1',
 		'#8e24aa',
-		' #7cb342',
+		'#7cb342',
 		'#f3ba2f',
 		'#2a71d0',
 		'#546e7a',
 		'#00897b',
-		'##ffb300',
 		'#5e35b1',
 		'#d81b60',
+		'#c0ca33',
+		'#f4511e',
 	]
 
 	// GENERAL FUNCTIONS
@@ -236,6 +237,18 @@ function DailyExpensesForm(props) {
 		setBudgetLeft(budgetTotal - calculateTotal(filteredDailyExpensesArr))
 	}
 
+	// EDIT EXPENSE
+
+	const [editExpenseId, setEditExpenseId] = useState(0)
+
+	const handleEditDailyExpense = async (index, event) => {
+		event.preventDefault()
+		const expenseId = event.target.getAttribute('data-key')
+		setEditExpenseId(expenseId)
+
+		console.log((event.target.parentNode.parentNode.addClass = 'edit'))
+	}
+
 	// CHART
 
 	Chart.register(CategoryScale)
@@ -387,7 +400,7 @@ function DailyExpensesForm(props) {
 							name="date"
 							min={firstDayISO}
 							max={lastDayISO}
-							value={`${isCurrentTime ? dateTodayISO : firstDayISO}`}
+							placeholder={`${isCurrentTime ? dateTodayISO : firstDayISO}`}
 							required></input>
 						<select name="category">
 							{propBudgetData.spendingCategories.map((elem, index) => {
@@ -420,39 +433,92 @@ function DailyExpensesForm(props) {
 									<th>Category</th>
 									<th>Name</th>
 									<th style={{ textAlign: 'right' }}>Amount</th>
-									<th>delete</th>
+									<th style={{ width: '130px' }}></th>
 								</tr>
 							</thead>
 							<tbody>
 								{dailyExpensesArr
 									.sort((a, b) => (a.date > b.date ? -1 : b.date > a.date ? 1 : 0))
 									.map((dailyExpense, index) => {
-										return (
-											<tr key={dailyExpense._id}>
-												<td style={{ width: '140px' }}>
-													<time dateTime={dailyExpense.date}>{writeOutDate(dailyExpense.date)}</time>
-												</td>
-												<td>
-													<strong>{dailyExpense.category}</strong>
-												</td>
-												<td>{dailyExpense.name}</td>
-												<td style={{ textAlign: 'right' }}>
-													-{dailyExpense.amount.toFixed(2)} {currency}
-												</td>
-												<td>
-													<button
-														data-key={dailyExpense._id}
-														className="btn-delete-item"
-														onClick={(event) => handleDeleteDailyExpense(index, event)}>
-														–
-													</button>
-												</td>
-											</tr>
-										)
+										if (dailyExpense._id !== editExpenseId) {
+											return (
+												<tr key={dailyExpense._id}>
+													<td style={{ width: '140px' }}>
+														<time dateTime={dailyExpense.date}>{writeOutDate(dailyExpense.date)}</time>
+													</td>
+													<td>
+														<strong>{dailyExpense.category}</strong>
+													</td>
+													<td>{dailyExpense.name}</td>
+													<td style={{ textAlign: 'right' }}>
+														-{dailyExpense.amount.toFixed(2)} {currency}
+													</td>
+													<td>
+														<button
+															data-key={dailyExpense._id}
+															className="btn-delete-item"
+															onClick={(event) => handleDeleteDailyExpense(index, event)}>
+															–
+														</button>
+														<button
+															data-key={dailyExpense._id}
+															className="btn-edit-item"
+															onClick={(event) => handleEditDailyExpense(index, event)}>
+															edit
+														</button>
+													</td>
+												</tr>
+											)
+										} else {
+											return (
+												<tr key={dailyExpense._id}>
+													<td colspan="5">
+														<button onClick={() => setEditExpenseId(0)} className="btn-close" aria-label="close">
+															x
+														</button>
+														<form onSubmit={(event) => handleEditDailyExpense(index, event)}>
+															<div className="grid">
+																<input
+																	type="date"
+																	name="date"
+																	min={firstDayISO}
+																	max={lastDayISO}
+																	value={dailyExpense.date.slice(0, 10)}
+																	required></input>
+																<select name="category" value={dailyExpense.category}>
+																	{propBudgetData.spendingCategories.map((elem, index) => {
+																		return <option key={elem + '-' + index}>{elem}</option>
+																	})}
+																</select>
+															</div>
+															<div className="grid">
+																<input type="text" value={dailyExpense.name} />
+																<div class="input-group">
+																	<span class="input-group-text">-</span>
+																	<input
+																		type="number"
+																		name="amount"
+																		value={dailyExpense.amount.toFixed(2)}
+																		placeholder="0,00"
+																		step=".01"
+																		required=""
+																	/>
+																	<span class="text">€</span>
+																</div>
+															</div>
+															<button type="submit" data-key={dailyExpense._id} className="btn-save-item">
+																save changes
+															</button>
+														</form>
+													</td>
+												</tr>
+											)
+										}
 									})}
 							</tbody>
 							<tfoot>
 								<tr>
+									<td></td>
 									<td></td>
 									<td></td>
 									<td></td>

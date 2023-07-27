@@ -119,6 +119,15 @@ button:disabled {
   cursor: normal;
 }
 
+.btn-close {
+  background-color: transparent;
+  width: auto;
+  margin: 0 0 0 auto;
+  border: none;
+  height: 48px;
+  font-weight: bold;
+}
+
 .btn-add-item,
 .btn-delete-item {
   font-size: 2rem;
@@ -252,15 +261,26 @@ tfoot td {
   text-align: right;
 }
 
-.table-daily-expenses button {
+.table-daily-expenses .btn-delete-item,
+.table-daily-expenses .btn-edit-item {
+  display: inline-block;
   font-size: 1rem;
   font-weight: bold;
   height: 2rem;
   line-height: 0;
-  margin: 0 0 0 auto;
+  margin: 0;
   padding: 0;
   width: 2rem;
 }
+
+.table-daily-expenses .btn-delete-item + .btn-edit-item {
+  margin-left: 0.5rem;
+}
+
+.table-daily-expenses .btn-edit-item {
+  background-color: var(--primary);
+}
+
 
 /*----- NAV TABS -----*/
 
