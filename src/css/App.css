@@ -278,6 +278,10 @@ button:disabled {
     height: 59px;
     width: 60px;
   }
+
+  .btn-add-item {
+    min-width: 60px;
+  }
 }
 
 .btn-add-item {
