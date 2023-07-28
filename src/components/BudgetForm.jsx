@@ -259,7 +259,7 @@ function BudgetForm(props) {
 											<span className="text">{`${currency}`}</span>
 										</div>
 										<button className="btn-delete-item" onClick={(event) => handleDeleteEarning(index, event)}>
-											–
+											<IconMinus />
 										</button>
 									</div>
 								)
@@ -279,7 +279,7 @@ function BudgetForm(props) {
 								<span className="text">{`${currency}`}</span>
 							</div>
 							<button className="btn-add-item" onClick={handleAddEarning}>
-								+
+								<IconPlus />
 							</button>
 						</div>
 					</fieldset>
@@ -312,7 +312,7 @@ function BudgetForm(props) {
 											<span className="text">{`${currency}`}</span>
 										</div>
 										<button className="btn-delete-item" onClick={(event) => handleDeleteExpense(index, event)}>
-											–
+											<IconMinus />
 										</button>
 									</div>
 								)
@@ -360,7 +360,7 @@ function BudgetForm(props) {
 									<div key={index} className="grid">
 										<strong>{spendingCategory}</strong>
 										<button className="btn-delete-item" onClick={(event) => handleDeleteSpendingCategory(index, event)}>
-											–
+											<IconMinus />
 										</button>
 									</div>
 								)
@@ -374,7 +374,7 @@ function BudgetForm(props) {
 								placeholder="name"
 							/>
 							<button className="btn-add-item" onClick={handleAddSpendingCategory}>
-								+
+								<IconPlus />
 							</button>
 						</div>
 					</fieldset>

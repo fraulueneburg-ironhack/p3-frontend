@@ -7,10 +7,7 @@ function Navbar() {
 	const { logOutUser, isLoggedIn } = useContext(AuthContext)
 	const navRef = useRef()
 	const showNavbar = () => {
-		console.log(navRef.current.classList)
-
 		navRef.current.classList.toggle('active')
-		console.log(navRef.current.classList)
 	}
 
 	return (
