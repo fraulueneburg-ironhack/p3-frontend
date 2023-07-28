@@ -10,6 +10,7 @@ import { ReactComponent as IconMinus } from '../assets/icon-minus.svg'
 import { ReactComponent as IconPlus } from '../assets/icon-plus.svg'
 import { ReactComponent as IconChevronLeft } from '../assets/icon-chevron-left.svg'
 import { ReactComponent as IconChevronRight } from '../assets/icon-chevron-right.svg'
+import { ReactComponent as IconClose } from '../assets/icon-close.svg'
 import dailyExpensesGif from '../assets/gif-no-daily-expenses.gif'
 import noChartGif from '../assets/gif-no-chart.gif'
 
@@ -238,12 +239,14 @@ function DailyExpensesForm(props) {
 
 	const [editExpenseId, setEditExpenseId] = useState(0)
 
-	const handleEditDailyExpense = async (index, event) => {
+	const handleEditDailyExpense = async (event) => {
 		event.preventDefault()
-		const expenseId = event.target.getAttribute('data-key')
-		setEditExpenseId(expenseId)
+		setEditExpenseId(event.target.getAttribute('data-key'))
+	}
 
-		console.log((event.target.parentNode.parentNode.addClass = 'edit'))
+	const handleChange = (event) => {
+		console.log('event.target.value', event.target)
+		//console.log('event.target.value', event.target.value)
 	}
 
 	// CHART
@@ -408,7 +411,7 @@ function DailyExpensesForm(props) {
 					<div className="grid">
 						<input type="text" name="name" placeholder="name"></input>
 						<div className="input-group">
-							<span className="input-group-text">-</span>
+							<span className="input-group-text">–</span>
 							<input type="number" name="amount" placeholder="0,00" step=".01" required></input>
 							<span className="text">€</span>
 							<button className="btn-add-item">
@@ -463,7 +466,7 @@ function DailyExpensesForm(props) {
 															<button
 																data-key={dailyExpense._id}
 																className="btn-edit-item"
-																onClick={(event) => handleEditDailyExpense(index, event)}>
+																onClick={(event) => handleEditDailyExpense(event)}>
 																<IconEdit />
 															</button>
 														</td>
@@ -472,9 +475,9 @@ function DailyExpensesForm(props) {
 											} else {
 												return (
 													<tr key={dailyExpense._id}>
-														<td colspan="5">
+														<td colSpan="5">
 															<button onClick={() => setEditExpenseId(0)} className="btn-close" aria-label="close">
-																x
+																<IconClose />
 															</button>
 															<form onSubmit={(event) => handleEditDailyExpense(index, event)}>
 																<div className="grid">
@@ -484,26 +487,33 @@ function DailyExpensesForm(props) {
 																		min={firstDayISO}
 																		max={lastDayISO}
 																		value={dailyExpense.date.slice(0, 10)}
-																		required></input>
-																	<select name="category" value={dailyExpense.category}>
+																		onChange={() => handleChange()}
+																		required
+																	/>
+																	<select
+																		name="category"
+																		value={dailyExpense.category}
+																		onChange={() => handleChange()}
+																		required>
 																		{propBudgetData.spendingCategories.map((elem, index) => {
 																			return <option key={elem + '-' + index}>{elem}</option>
 																		})}
 																	</select>
 																</div>
 																<div className="grid">
-																	<input type="text" value={dailyExpense.name} />
-																	<div class="input-group">
-																		<span class="input-group-text">-</span>
+																	<input type="text" value={dailyExpense.name} onChange={() => handleChange()} />
+																	<div className="input-group">
+																		<span className="input-group-text">–</span>
 																		<input
 																			type="number"
 																			name="amount"
 																			value={dailyExpense.amount.toFixed(2)}
 																			placeholder="0,00"
 																			step=".01"
-																			required=""
+																			onChange={() => handleChange()}
+																			required
 																		/>
-																		<span class="text">€</span>
+																		<span className="text">€</span>
 																	</div>
 																</div>
 																<button type="submit" data-key={dailyExpense._id} className="btn-save-item">
