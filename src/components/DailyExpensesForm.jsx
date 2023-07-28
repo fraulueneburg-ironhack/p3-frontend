@@ -238,15 +238,52 @@ function DailyExpensesForm(props) {
 	// EDIT EXPENSE
 
 	const [editExpenseId, setEditExpenseId] = useState(0)
+	const [editExpenseName, setEditExpenseName] = useState()
+	const [editExpenseDate, setEditExpenseDate] = useState()
+	const [editExpenseCategory, setEditExpenseCategory] = useState()
+	const [editExpenseAmount, setEditExpenseAmount] = useState(0)
 
-	const handleEditDailyExpense = async (event) => {
+	const handleEditDailyExpense = (event) => {
 		event.preventDefault()
-		setEditExpenseId(event.target.getAttribute('data-key'))
+		const expenseId = event.target.getAttribute('data-key')
+		const expenseData = dailyExpensesArr.find((elem) => elem._id === expenseId)
+		setEditExpenseId(expenseId)
+		setEditExpenseDate(expenseData.date.slice(0, 10))
+		setEditExpenseName(expenseData.name)
+		setEditExpenseCategory(expenseData.category)
+		setEditExpenseAmount(expenseData.amount.toFixed(2))
 	}
 
-	const handleChange = (event) => {
-		console.log('event.target.value', event.target)
-		//console.log('event.target.value', event.target.value)
+	const handleUpdateDailyExpense = async (event) => {
+		event.preventDefault()
+		const expenseId = event.target.getAttribute('data-key')
+		const gotToken = localStorage.getItem('authToken')
+		const updatedExpense = {
+			amount: +editExpenseAmount,
+			category: editExpenseCategory,
+			date: new Date(editExpenseDate),
+			name: editExpenseName,
+		}
+
+		try {
+			await axios.post(`${API_URL}/budget/updateexpense/${expenseId}`, updatedExpense, {
+				headers: { authorization: `Bearer ${gotToken}` },
+			})
+			const expenseIndex = dailyExpensesArr.findIndex((elem) => elem._id === expenseId)
+			let updatedDailyExpenseArr = [...dailyExpensesArr]
+			updatedDailyExpenseArr[expenseIndex].amount = +editExpenseAmount
+			updatedDailyExpenseArr[expenseIndex].category = editExpenseCategory
+			updatedDailyExpenseArr[expenseIndex].date = editExpenseDate
+			updatedDailyExpenseArr[expenseIndex].name = editExpenseName
+			setDailyExpensesArr(updatedDailyExpenseArr)
+			setdailyExpensesTotal(calculateTotal(updatedDailyExpenseArr))
+			setBudgetLeft(budgetTotal - calculateTotal(updatedDailyExpenseArr))
+			setEditExpenseId(0)
+			navigate('/budget')
+		} catch (err) {
+			console.log('im in the catch block')
+			console.log('THIS IS THE ERR', err)
+		}
 	}
 
 	// CHART
@@ -436,7 +473,7 @@ function DailyExpensesForm(props) {
 										<th>Category</th>
 										<th>Name</th>
 										<th style={{ textAlign: 'right' }}>Amount</th>
-										<th style={{ width: '130px' }}></th>
+										<th style={{ textAlign: 'right', width: '130px' }}></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -479,21 +516,24 @@ function DailyExpensesForm(props) {
 															<button onClick={() => setEditExpenseId(0)} className="btn-close" aria-label="close">
 																<IconClose />
 															</button>
-															<form onSubmit={(event) => handleEditDailyExpense(index, event)}>
+															<form onSubmit={handleUpdateDailyExpense} data-key={dailyExpense._id}>
 																<div className="grid">
 																	<input
 																		type="date"
 																		name="date"
 																		min={firstDayISO}
 																		max={lastDayISO}
-																		value={dailyExpense.date.slice(0, 10)}
-																		onChange={() => handleChange()}
+																		//value={dailyExpense.date.slice(0, 10)}
+
+																		value={editExpenseDate}
+																		onChange={(event) => setEditExpenseDate(event.target.value)}
 																		required
 																	/>
 																	<select
 																		name="category"
-																		value={dailyExpense.category}
-																		onChange={() => handleChange()}
+																		//value={dailyExpense.category}
+																		value={editExpenseCategory}
+																		onChange={(event) => setEditExpenseCategory(event.target.value)}
 																		required>
 																		{propBudgetData.spendingCategories.map((elem, index) => {
 																			return <option key={elem + '-' + index}>{elem}</option>
@@ -501,22 +541,29 @@ function DailyExpensesForm(props) {
 																	</select>
 																</div>
 																<div className="grid">
-																	<input type="text" value={dailyExpense.name} onChange={() => handleChange()} />
+																	<input
+																		type="text"
+																		//value={dailyExpense.name}
+																		value={editExpenseName}
+																		onChange={(event) => setEditExpenseName(event.target.value)}
+																		name="name"
+																	/>
 																	<div className="input-group">
 																		<span className="input-group-text">–</span>
 																		<input
 																			type="number"
 																			name="amount"
-																			value={dailyExpense.amount.toFixed(2)}
+																			//value={dailyExpense.amount.toFixed(2)}
+																			value={editExpenseAmount}
 																			placeholder="0,00"
 																			step=".01"
-																			onChange={() => handleChange()}
+																			onChange={(event) => setEditExpenseAmount(event.target.value)}
 																			required
 																		/>
 																		<span className="text">€</span>
 																	</div>
 																</div>
-																<button type="submit" data-key={dailyExpense._id} className="btn-save-item">
+																<button type="submit" className="btn-save-item">
 																	save changes
 																</button>
 															</form>

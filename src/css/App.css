@@ -265,7 +265,7 @@ button:disabled {
 .btn-add-item,
 .btn-delete-item {
   font-size: 2rem;
-  height: 62px;
+  height: 59px;
   line-height: 0;
   text-align: center;
   width: 70px;
@@ -379,10 +379,24 @@ table {
   margin: 0;
 }
 
+table td {
+  vertical-align: top;
+}
+
 @media (max-width: 767px) {
   table.table-daily-expenses td {
     min-width: 110px;
   }
+}
+
+table.table-daily-expenses tbody td:last-child,
+table.table-daily-expenses tbody td:nth-last-child(2) {
+  min-width: 130px;
+  text-align: right;
+}
+
+table.table-daily-expenses tbody td:not(:last-child) {
+  padding-top: 0.75rem;
 }
 
 tr.greyed-out {
