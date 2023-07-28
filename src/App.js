@@ -9,7 +9,6 @@ import ProfilePage from './pages/ProfilePage'
 import BudgetOverview from './pages/BudgetOverview'
 import BudgetSettings from './pages/BudgetSettings'
 import PrivatePage from './pages/PrivatePage'
-import SavingGoals from './pages/SavingGoals'
 
 function App() {
 	return (
@@ -39,14 +38,6 @@ function App() {
 						element={
 							<PrivatePage>
 								<BudgetSettings />
-							</PrivatePage>
-						}
-					/>
-					<Route
-						path="/saving-goals"
-						element={
-							<PrivatePage>
-								<SavingGoals />
 							</PrivatePage>
 						}
 					/>
