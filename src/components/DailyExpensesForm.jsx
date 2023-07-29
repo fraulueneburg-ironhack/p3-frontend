@@ -77,6 +77,8 @@ function DailyExpensesForm(props) {
 	const monthToday = new Date().getMonth()
 	const yearToday = new Date().getFullYear()
 	const dateTodayISO = new Date().toISOString().slice(0, 10)
+	const lastDayFromToday = new Date(new Date().setDate(new Date().getDate() + (((-dayToday - 2) % 7) + 6)))
+	const lastDayFromTodayISO = lastDayFromToday.toISOString().slice(0, 10)
 
 	const [isCurrentTime, setIsCurrentTime] = useState(true)
 
@@ -521,17 +523,13 @@ function DailyExpensesForm(props) {
 																	<input
 																		type="date"
 																		name="date"
-																		min={firstDayISO}
-																		max={lastDayISO}
-																		//value={dailyExpense.date.slice(0, 10)}
-
+																		max={lastDayFromTodayISO}
 																		value={editExpenseDate}
 																		onChange={(event) => setEditExpenseDate(event.target.value)}
 																		required
 																	/>
 																	<select
 																		name="category"
-																		//value={dailyExpense.category}
 																		value={editExpenseCategory}
 																		onChange={(event) => setEditExpenseCategory(event.target.value)}
 																		required>
